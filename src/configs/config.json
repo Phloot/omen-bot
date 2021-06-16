@@ -1,7 +1,7 @@
 {
     "authentication": {
-        "discord_token": "test",
-        "gw2_token": "test"
+        "discord_token": "test2",
+        "gw2_token": "test2"
     },
     "gw2_api": {
         "schema_version": "2021-06-16T02:19:33Z"
