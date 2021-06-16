@@ -1,6 +1,6 @@
 {
     "authentication": {
-        "discord_token": "test3",
+        "discord_token": "test4",
         "gw2_token": "test2"
     },
     "gw2_api": {
