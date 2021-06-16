@@ -13,6 +13,7 @@ config_json_file.close()
 
 GW2_API_KEY = config['authentication']['gw2_token']
 API_SCHEMA_VERSION = config['gw2_api']['schema_version']
+RESPONSE_PAGE_SIZE = config['gw2_api']['page_size']
 
 class APIKeyMissingError(Exception):
     pass
@@ -26,5 +27,6 @@ session = requests.Session()
 session.params = {}
 session.params['access_token'] = GW2_API_KEY
 session.params['v'] = API_SCHEMA_VERSION
+session.params['page_size'] = RESPONSE_PAGE_SIZE
 
 from .gw2_api import GW2Wrapper
