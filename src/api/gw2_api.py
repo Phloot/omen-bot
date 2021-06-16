@@ -3,6 +3,11 @@ import os
 import json
 from . import session
 
+"""
+GW2 API wrapper class. Configurations for endpoints are
+maintained in the src/configs/config.json file for ease
+of updating in the event an endpoint changes.
+"""
 class GW2Wrapper(object):
     def __init__(self):
         # Set OS configuration paths
@@ -16,10 +21,19 @@ class GW2Wrapper(object):
 
     # Internal URL builder function
     def _url_builder(self, endpoint):
-        return "{0}/{1}".format(
-            self.config['gw2_api']['api_base_path'], 
-            self.config['gw2_api']['api_version']
+        return "{0}/{1}/{2}".format(
+            self.config['gw2_api_config']['api_base_path'], 
+            self.config['gw2_api_config']['api_version'],
+            endpoint
             ) 
+
+    # Internal general request function
+    def _api_request(self, url):
+        response = session.get(url)
+        return response.json()
+
+    def worlds(self):
+        return self._api_request(self._url_builder(self.config['endpoints']['worlds']))
 
     def wvw_matches(self):
         pass
