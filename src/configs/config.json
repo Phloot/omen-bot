@@ -1,9 +1,0 @@
-{
-    "authentication": {
-        "discord_token": "test",
-        "gw2_token": "84CF4DFD-D23B-9D4D-A94D-918A33DD0F8FA692141E-717C-440B-94EA-485BE23F3D1D"
-    },
-    "gw2_api": {
-        "schema_version": "2021-06-16T02:19:33Z"
-    }
-}
