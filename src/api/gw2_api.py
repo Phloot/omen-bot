@@ -2,6 +2,7 @@
 import os 
 import json
 from . import session
+from functions import return_config
 
 """
 GW2 API wrapper class. Configurations for endpoints are
@@ -10,20 +11,13 @@ of updating in the event an endpoint changes.
 """
 class GW2Wrapper(object):
     def __init__(self):
-        # Set OS configuration paths
-        _base_dir = os.path.dirname(__file__)
-        _config_path = os.path.join(_base_dir, '../configs/config.json')
-
-        # Pull data from configuration file
-        _config_json_file = open(_config_path,)
-        self.config = json.load(_config_json_file)
-        _config_json_file.close()
+        self.configs = return_config()
 
     # Internal URL builder function
     def _url_builder(self, endpoint):
         return "{0}/{1}/{2}".format(
-            self.config['gw2_api_config']['api_base_path'], 
-            self.config['gw2_api_config']['api_version'],
+            self.configs['gw2_api_config']['api_base_path'], 
+            self.configs['gw2_api_config']['api_version'],
             endpoint
             ) 
 
@@ -33,7 +27,7 @@ class GW2Wrapper(object):
         return response.json()
 
     def worlds(self):
-        return self._api_request(self._url_builder(self.config['gw2_endpoints']['worlds']))
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds']))
 
     def wvw_matches(self):
         pass
