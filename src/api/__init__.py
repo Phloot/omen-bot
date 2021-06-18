@@ -23,6 +23,8 @@ if not GW2_API_KEY:
         "Missing required API key. Please enter API key into config.json file."
     ) 
 
+# The requests session parameters are maintained in the config.json file
+# for ease of maintenance
 session = requests.Session()
 session.params = {}
 session.params['access_token'] = GW2_API_KEY
