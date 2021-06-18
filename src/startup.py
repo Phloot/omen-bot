@@ -2,9 +2,9 @@ import discord
 import json
 import os
 from discord.ext import commands
-#from oasis_bot import OasisBot
 
 if __name__ == "__main__":
+    # Pre bot launch configuration 
     base_dir = os.path.dirname(__file__)
     config_path = os.path.join(base_dir, 'configs/config.json')
 
@@ -12,9 +12,19 @@ if __name__ == "__main__":
     config = json.load(config_json_file)
     config_json_file.close()
 
-    #oasis_client = OasisBot()
-    #oasis_client.run(config['authentication']['discord_token'])
+    # Initialize bot and assign intents
+    intents = discord.Intents.default()
+    oasis_bot = commands.Bot(command_prefix='!', intents=intents)
+    intents.members = True
+    intents.presences = True
+    
+    @oasis_bot.event
+    async def on_ready():
+        print(f'\n\nName: {oasis_bot.user.name}\nID: {oasis_bot.user.id}\nStatus: Ready\n----------------------\n')  
+        return
 
-    oasis_bot = commands.Bot(command_prefix='!')
+    # Load cogs
     oasis_bot.load_extension("cogs.new_user_cog")
+
+    # Run bot
     oasis_bot.run(config['authentication']['discord_token'])

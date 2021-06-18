@@ -33,7 +33,7 @@ class GW2Wrapper(object):
         return response.json()
 
     def worlds(self):
-        return self._api_request(self._url_builder(self.config['endpoints']['worlds']))
+        return self._api_request(self._url_builder(self.config['gw2_endpoints']['worlds']))
 
     def wvw_matches(self):
         pass
