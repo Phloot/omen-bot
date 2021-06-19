@@ -14,7 +14,16 @@ if __name__ == "__main__":
     oasis_bot = commands.Bot(command_prefix='!', intents=intents)
     intents.members = True
     intents.presences = True
-    
+
+    # Load cogs
+    base_dir = os.path.abspath(sys.path[0])
+    cog_path = os.path.join(base_dir, 'cogs')
+
+    for file in os.listdir(cog_path):
+        if file.endswith('.py'):
+            oasis_bot.load_extension("cogs.{0}".format(file.replace(".py", "")))
+            cog_counter+=1
+
     @oasis_bot.event
     async def on_ready():
         print("\nName: {0}\nID: {1}\nCog(s): {2}\nPing: {3}ms\n".format
@@ -26,16 +35,6 @@ if __name__ == "__main__":
             )
         )  
         return
-
-    # Load cogs
-    #oasis_bot.load_extension("cogs.new_user_cog")
-    base_dir = os.path.abspath(sys.path[0])
-    cog_path = os.path.join(base_dir, 'cogs')
-
-    for file in os.listdir(cog_path):
-        if file.endswith('.py'):
-            oasis_bot.load_extension("cogs.{0}".format(file.replace(".py", "")))
-            cog_counter+=1
 
     # Run bot
     oasis_bot.run(return_config()['authentication']['discord_token'])

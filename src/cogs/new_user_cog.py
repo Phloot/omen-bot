@@ -36,6 +36,13 @@ class NewUserCog(commands.Cog):
                 self.oasis_bot.get_channel(self.configs['discord_channels']['join_channel'])
                 ), inline=False
             )
+        embed.add_field(name="Additional Info", value="If you have any questions about your class, or would like to have 1 on 1\
+            discussions about the classes that you play, we'd love to help. Feel free to reach out to any **__Organizer__** or \
+            **__Advisor__** for info, and check out {0.mention} for helpful builds.".format
+            (
+                self.oasis_bot.get_channel(self.configs['discord_channels']['meta_builds'])
+                )
+            )
         embed.set_footer(text="- [CO] leadership team")
         await member.send(embed=embed)
 
