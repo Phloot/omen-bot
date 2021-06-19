@@ -2,6 +2,7 @@
 import os
 import sys
 import discord
+import logging
 from discord.ext import commands
 
 class BotManagement(commands.Cog):

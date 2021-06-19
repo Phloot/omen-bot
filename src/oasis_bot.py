@@ -1,4 +1,6 @@
 import discord
+import logging
+import logging.config
 import json
 import sys
 import os
@@ -9,6 +11,14 @@ from functions import return_config
 if __name__ == "__main__":
     # General variables
     cog_counter = 0
+
+    # Define logger
+    logger = logging.getLogger(__name__)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
 
     # Initialize bot and assign intents
     intents = discord.Intents.default()

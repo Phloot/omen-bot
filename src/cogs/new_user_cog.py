@@ -1,5 +1,6 @@
 # src/cogs/new_user_cog.py
 import discord
+import logging
 from discord.ext import commands
 from functions import return_config
 

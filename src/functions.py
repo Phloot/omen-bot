@@ -3,6 +3,8 @@ import os
 import json
 import logging
 
+logger = logging.getLogger(__name__)
+
 # Reusable function to pull in config
 def return_config():
     base_dir = os.path.dirname(__file__)
