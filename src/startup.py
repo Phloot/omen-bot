@@ -3,6 +3,7 @@ import json
 import sys
 import os
 from discord.ext import commands
+from discord.ext.commands import NotOwner
 from functions import return_config
 
 if __name__ == "__main__":
@@ -23,6 +24,14 @@ if __name__ == "__main__":
         if file.endswith('.py'):
             oasis_bot.load_extension("cogs.{0}".format(file.replace(".py", "")))
             cog_counter+=1
+
+    # For exceptions caused through decorator perms, we need
+    # to use a custom error handler as the library does not
+    # provide a means to handling these errors
+    @oasis_bot.event
+    async def on_command_error(ctx, error):
+        if isinstance(error, NotOwner):
+            print("User is not owner: {0}".format(str(error)))
 
     @oasis_bot.event
     async def on_ready():

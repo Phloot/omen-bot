@@ -48,8 +48,15 @@ class NewUserCog(commands.Cog):
                 self.oasis_bot.get_channel(self.configs['discord_channels']['meta_builds'])
                 )
             )
-        embed.set_footer(text="- [CO] leadership team")
-        await member.send(embed=embed)
+        embed.set_footer(text="Thanks, [CO] leadership team")
+
+        try:
+            await member.send(embed=embed)
+        except discord.Forbidden:
+            print("Messages to {0} forbidden".format(member))
+        except discord.DiscordException as gen_ex:
+            print("Exception {0} occurred.".format(str(gen_ex)))
+
 
 def setup(oasis_bot):
     oasis_bot.add_cog(NewUserCog(oasis_bot))
