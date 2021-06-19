@@ -3,6 +3,11 @@ import discord
 from discord.ext import commands
 from functions import return_config
 
+"""
+Cog: NewUserCog
+Description: Used to handle member join events, by welcoming them in the system
+channel and sending them a direct message with more information.
+"""
 class NewUserCog(commands.Cog):
     def __init__(self, oasis_bot):
         self.oasis_bot = oasis_bot
