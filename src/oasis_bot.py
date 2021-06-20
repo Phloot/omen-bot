@@ -42,17 +42,15 @@ if __name__ == "__main__":
     async def on_command_error(ctx, error):
         if isinstance(error, NotOwner):
             print("User is not owner: {0}".format(str(error)))
+            logger.warning("{0} attempted to execute command restricted to bot owner".format(ctx.author.name))
 
     @oasis_bot.event
     async def on_ready():
-        print("\nName: {0}\nID: {1}\nCog(s): {2}\nPing: {3}ms\n".format
-        (
-            oasis_bot.user.name,
-            oasis_bot.user.id,
-            cog_counter,
-            round(oasis_bot.latency * 1000)
-            )
-        )  
+        logger.info("Bot is ready")
+        logger.info("Name: {0}".format(oasis_bot.user.name))
+        logger.info("ID: {0}".format(oasis_bot.user.id))
+        logger.info("Cog(s): {0}".format(cog_counter))
+        logger.info("Ping: {0}".format(round(oasis_bot.latency * 1000)))
         return
 
     # Run bot

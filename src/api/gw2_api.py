@@ -1,6 +1,7 @@
 # GW2 API wrapper class
 import os 
 import json
+import logging
 from . import session
 from functions import return_config
 
