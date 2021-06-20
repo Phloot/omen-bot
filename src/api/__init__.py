@@ -1,19 +1,14 @@
 import os
 import requests
 import json
+from functions import return_config
 
-# Set OS configuration paths
-base_dir = os.path.dirname(__file__)
-config_path = os.path.join(base_dir, '../configs/config.json')
-
-# Pull data from configuration file
-config_json_file = open(config_path,)
-config = json.load(config_json_file)
-config_json_file.close()
+# Grab configs
+config = return_config()
 
 GW2_API_KEY = config['authentication']['gw2_token']
-API_SCHEMA_VERSION = config['gw2_api']['schema_version']
-RESPONSE_PAGE_SIZE = config['gw2_api']['page_size']
+API_SCHEMA_VERSION = config['gw2_api_config']['schema_version']
+RESPONSE_PAGE_SIZE = config['gw2_api_config']['page_size']
 
 class APIKeyMissingError(Exception):
     pass

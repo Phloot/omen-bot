@@ -50,7 +50,7 @@ if __name__ == "__main__":
         logger.info("Name: {0}".format(oasis_bot.user.name))
         logger.info("ID: {0}".format(oasis_bot.user.id))
         logger.info("Cog(s): {0}".format(cog_counter))
-        logger.info("Ping: {0}".format(round(oasis_bot.latency * 1000)))
+        logger.info("Ping: {0}ms".format(round(oasis_bot.latency * 1000)))
         return
 
     # Run bot
