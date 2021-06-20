@@ -13,7 +13,7 @@ class NewUserCog(commands.Cog):
     def __init__(self, oasis_bot):
         self.oasis_bot = oasis_bot
         self.configs = return_config()
-        logger = logging.getLogger("oasis_bot_logger")
+        self.logger = logging.getLogger("oasis_bot_logger")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -55,9 +55,9 @@ class NewUserCog(commands.Cog):
         try:
             await member.send(embed=embed)
         except discord.Forbidden:
-            print("Messages to {0} forbidden".format(member))
+            self.logger.warning("{0} is not accepting direct messages at this time".format(member))
         except discord.DiscordException as gen_ex:
-            print("Exception {0} occurred.".format(str(gen_ex)))
+            self.logger.warning("Failed to direct message new user ({0})".format(str(gen_ex)))
 
 
 def setup(oasis_bot):
