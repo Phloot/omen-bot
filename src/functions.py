@@ -17,6 +17,10 @@ def return_config():
 
     return config
 
+# Helper function to convert args to lowercase
+def to_lower(argument):
+    return argument.lower()
+
 # Function to generate MD5 checksum of file
 def md5_check(file_content):
     md5_hash = hashlib.md5()

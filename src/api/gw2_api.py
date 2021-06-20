@@ -16,11 +16,13 @@ class GW2Wrapper(object):
         self.logger = logging.getLogger("oasis_bot_logger")
 
     # Internal URL builder function
-    def _url_builder(self, endpoint):
-        return "{0}/{1}/{2}".format(
+    def _url_builder(self, endpoint, *args, **kwargs):
+        params = kwargs.get("addl_params", "")
+        return "{0}/{1}/{2}{3}".format(
             self.configs['gw2_api_config']['api_base_path'], 
             self.configs['gw2_api_config']['api_version'],
-            endpoint
+            endpoint,
+            params
             ) 
 
     # Internal general request function
@@ -29,7 +31,7 @@ class GW2Wrapper(object):
         return response.json()
 
     def worlds(self):
-        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds']))
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds'], addl_params="?ids=all"))
 
     def wvw_matches(self):
         pass
