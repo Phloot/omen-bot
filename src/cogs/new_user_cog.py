@@ -13,6 +13,7 @@ class NewUserCog(commands.Cog):
     def __init__(self, oasis_bot):
         self.oasis_bot = oasis_bot
         self.configs = return_config()
+        logger = logging.getLogger("oasis_bot_logger")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):

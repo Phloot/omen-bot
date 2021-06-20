@@ -12,6 +12,7 @@ of updating in the event an endpoint changes.
 class GW2Wrapper(object):
     def __init__(self):
         self.configs = return_config()
+        logger = logging.getLogger("oasis_bot_logger")
 
     # Internal URL builder function
     def _url_builder(self, endpoint):

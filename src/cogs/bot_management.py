@@ -8,6 +8,7 @@ from discord.ext import commands
 class BotManagement(commands.Cog):
     def __init__(self, oasis_bot):
         self.oasis_bot = oasis_bot
+        logger = logging.getLogger("oasis_bot_logger")
 
     @commands.command()
     @commands.is_owner()
