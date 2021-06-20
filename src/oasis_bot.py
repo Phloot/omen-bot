@@ -15,7 +15,7 @@ if __name__ == "__main__":
     # Define logger
     logger = logging.getLogger("oasis_bot_logger")
     handler = logging.StreamHandler()
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)-5s %(module)s %(message)s')
+    formatter = logging.Formatter('[%(asctime)-3s] %(levelname)-3s %(module)s %(message)s', "%Y-%m-%d %H:%M:%S")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
