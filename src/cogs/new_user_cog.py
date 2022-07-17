@@ -1,5 +1,4 @@
 # src/cogs/new_user_cog.py
-<<<<<<< HEAD
 import discord
 import logging
 from discord.ext import commands
@@ -10,32 +9,23 @@ Cog: NewUserCog
 Description: Used to handle member join events, by welcoming them in the system
 channel and sending them a direct message with more information.
 """
-=======
-from discord.ext import commands
-from functions import return_config
-
->>>>>>> 0d10d75befd576c4faf79e842aaad44b4476add9
 class NewUserCog(commands.Cog):
-    def __init__(self, oasis_bot):
-        self.oasis_bot = oasis_bot
+    def __init__(self, omen_bot):
+        self.omen_bot = omen_bot
         self.configs = return_config()
-<<<<<<< HEAD
-        self.logger = logging.getLogger("oasis_bot_logger")
-=======
->>>>>>> 0d10d75befd576c4faf79e842aaad44b4476add9
+        self.logger = logging.getLogger("omen_bot_logger")
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         channel = member.guild.system_channel
 
-<<<<<<< HEAD
         # Send a welcome message to the system channel
         if channel is not None:
             await channel.send('Welcome to [CO], {0.mention}! Please check out {1.mention} to choose roles and {2.mention} if you\'re looking for squad builds.'.format
             (
                 member,
-                self.oasis_bot.get_channel(self.configs['discord_channels']['role_selection']),
-                self.oasis_bot.get_channel(self.configs['discord_channels']['meta_builds']),
+                self.omen_bot.get_channel(self.configs['discord_channels']['role_selection']),
+                self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']),
                 )
             )
         
@@ -50,14 +40,14 @@ class NewUserCog(commands.Cog):
             requirements, you may find that [CO] is the perfect complement to your primary NA timezone guild. Interested\
             in joining the squad? Check out {0.mention} for details.".format
             (
-                self.oasis_bot.get_channel(self.configs['discord_channels']['join_channel'])
+                self.omen_bot.get_channel(self.configs['discord_channels']['join_channel'])
                 ), inline=False
             )
         embed.add_field(name="Additional Info", value="If you have any questions about your class, or would like to have 1 on 1\
             discussions about the classes that you play, we'd love to help. Feel free to reach out to any **__Organizer__** or \
             **__Advisor__** for info, and check out {0.mention} for helpful builds.".format
             (
-                self.oasis_bot.get_channel(self.configs['discord_channels']['meta_builds'])
+                self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds'])
                 )
             )
         embed.set_footer(text="Thanks, [CO] leadership team")
@@ -69,16 +59,6 @@ class NewUserCog(commands.Cog):
         except discord.DiscordException as gen_ex:
             self.logger.warning("Failed to direct message new user ({0})".format(str(gen_ex)))
 
-=======
-        if channel is not None:
-            await channel.send('Welcome to [CO], {0.mention}! Please check out {1.mention} and {2.mention} when you have time.'.format
-            (
-                member,
-                self.configs['discord_channels']['role_selection'],
-                self.configs['discord_channels']['community_info'],
-                )
-            )
->>>>>>> 0d10d75befd576c4faf79e842aaad44b4476add9
 
-def setup(oasis_bot):
-    oasis_bot.add_cog(NewUserCog(oasis_bot))
+def setup(omen_bot):
+    omen_bot.add_cog(NewUserCog(omen_bot))
