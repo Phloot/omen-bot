@@ -9,9 +9,9 @@ from functions import to_lower
 from api.gw2_api import GW2Wrapper
 
 class WVWCommands(commands.Cog):
-    def __init__(self, oasis_bot):
-        self.oasis_bot = oasis_bot
-        self.logger = logging.getLogger("oasis_bot_logger")
+    def __init__(self, omen_bot):
+        self.omen_bot = omen_bot
+        self.logger = logging.getLogger("omen_bot_logger")
         self.gw2_api = GW2Wrapper()
     
     @commands.command()
@@ -37,5 +37,5 @@ class WVWCommands(commands.Cog):
 
         await ctx.channel.send(embed=embed)
 
-def setup(oasis_bot):
-    oasis_bot.add_cog(WVWCommands(oasis_bot))
+def setup(omen_bot):
+    omen_bot.add_cog(WVWCommands(omen_bot))

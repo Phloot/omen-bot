@@ -6,9 +6,9 @@ import logging
 from discord.ext import commands
 
 class BotManagement(commands.Cog):
-    def __init__(self, oasis_bot):
-        self.oasis_bot = oasis_bot
-        self.logger = logging.getLogger("oasis_bot_logger")
+    def __init__(self, omen_bot):
+        self.omen_bot = omen_bot
+        self.logger = logging.getLogger("omen_bot_logger")
 
     @commands.command()
     @commands.is_owner()
@@ -19,10 +19,10 @@ class BotManagement(commands.Cog):
 
         for file in os.listdir(cog_path):
             if file.endswith('.py'):
-                self.oasis_bot.reload_extension("cogs.{0}".format(file.replace(".py", "")))
+                self.omen_bot.reload_extension("cogs.{0}".format(file.replace(".py", "")))
                 cog_counter+=1
 
         await ctx.channel.send("Reloaded {0} cog(s)".format(cog_counter))
 
-def setup(oasis_bot):
-    oasis_bot.add_cog(BotManagement(oasis_bot))
+def setup(omen_bot):
+    omen_bot.add_cog(BotManagement(omen_bot))
