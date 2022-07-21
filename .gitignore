@@ -1,4 +1,4 @@
-src/configs/config.json
+src/omen/configs/config.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
