@@ -1,6 +1,7 @@
 import discord
 import logging
 import logging.config
+import argparse
 import json
 import sys
 import os
@@ -9,6 +10,11 @@ from discord.ext.commands import NotOwner
 from functions import return_config
 
 if __name__ == "__main__":
+    # Capture arguments
+    parser = argparse.ArgumentParser(description='Capture script arguments.')
+    parser.add_argument('--discord_token', type=str, help='Discord not token') # will be accesible under args.discord_token
+    args = parser.parse_args()
+
     # General variables
     cog_counter = 0
 
@@ -54,4 +60,4 @@ if __name__ == "__main__":
         return
 
     # Run bot
-    omen_bot.run(return_config()['authentication']['discord_token'])
+    omen_bot.run(args.discord_token)
