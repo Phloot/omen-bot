@@ -1,8 +1,6 @@
 # Omen Bot
 
-.. image:: https://discordapp.com/api/guilds/840265739884560384/widget.png
-   :target: https://discord.gg/co-wvw
-   :alt: Discord server invite
+[![Discord](https://discordapp.com/api/guilds/840265739884560384/widget.png)](https://discord.gg/Y3VkTCdV4b)
 [![ci](https://github.com/Phloot/omen-bot/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/Phloot/omen-bot/actions/workflows/docker-ci.yml)
 
 ## A Guild Wars 2 themed Discord bot for the Celestial Omen guild on Crystal Desert
