@@ -1,7 +1,8 @@
 # Omen Bot
 
-[![Discord](https://discordapp.com/api/guilds/840265739884560384/widget.png)](https://discord.gg/Y3VkTCdV4b)
+[![GitHub release](https://img.shields.io/github/release/docker/login-action.svg?style=flat-square)](https://github.com/docker/login-action/releases/latest)
 [![ci](https://github.com/Phloot/omen-bot/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/Phloot/omen-bot/actions/workflows/docker-ci.yml)
+[![Discord](https://discordapp.com/api/guilds/840265739884560384/widget.png)](https://discord.gg/Y3VkTCdV4b)
 
 ## A Guild Wars 2 themed Discord bot for the Celestial Omen guild on Crystal Desert
 
