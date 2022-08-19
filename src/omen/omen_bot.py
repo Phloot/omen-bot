@@ -47,7 +47,6 @@ if __name__ == "__main__":
     @omen_bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, NotOwner):
-            print("User is not owner: {0}".format(str(error)))
             logger.warning("{0} attempted to execute command restricted to bot owner".format(ctx.author.name))
 
     @omen_bot.event
