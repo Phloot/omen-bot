@@ -1,3 +1,4 @@
+import asyncio
 import discord
 import logging
 import logging.config
@@ -12,11 +13,8 @@ from functions import return_config
 if __name__ == "__main__":
     # Capture arguments
     parser = argparse.ArgumentParser(description='Capture script arguments.')
-    parser.add_argument('--discord_token', type=str, help='Discord not token') # will be accesible under args.discord_token
+    parser.add_argument('--discord_token', type=str, help='Discord bot token') # will be accesible under args.discord_token
     args = parser.parse_args()
-
-    # General variables
-    cog_counter = 0
 
     # Define logger
     logger = logging.getLogger("omen_bot_logger")
@@ -28,18 +26,25 @@ if __name__ == "__main__":
 
     # Initialize bot and assign intents
     intents = discord.Intents.default()
-    omen_bot = commands.Bot(command_prefix='!', intents=intents)
     intents.members = True
     intents.presences = True
+    omen_bot = commands.Bot(command_prefix='!', intents=intents)
 
     # Load cogs
-    base_dir = os.path.abspath(sys.path[0])
-    cog_path = os.path.join(base_dir, 'cogs')
+    async def load_cogs():
+        cog_counter = 0
 
-    for file in os.listdir(cog_path):
-        if file.endswith('.py'):
-            omen_bot.load_extension("cogs.{0}".format(file.replace(".py", "")))
-            cog_counter+=1
+        # OS agnostic pathing
+        base_dir = os.path.abspath(sys.path[0])
+        cog_path = os.path.join(base_dir, 'cogs')
+
+        # Load cogs
+        for file in os.listdir(cog_path):
+            if file.endswith('.py'):
+                await omen_bot.load_extension("cogs.{0}".format(file.replace(".py", "")))
+                cog_counter+=1
+
+        logger.info("Cog(s): {0}".format(cog_counter))
 
     # For exceptions caused through decorator perms, we need
     # to use a custom error handler as the library does not
@@ -51,12 +56,15 @@ if __name__ == "__main__":
 
     @omen_bot.event
     async def on_ready():
+        await omen_bot.change_presence(
+            activity=discord.Activity(type=discord.ActivityType.watching, name="over CO")
+        )
+        await load_cogs()
         logger.info("Name: {0}".format(omen_bot.user.name))
         logger.info("ID: {0}".format(omen_bot.user.id))
-        logger.info("Cog(s): {0}".format(cog_counter))
         logger.info("Ping: {0}ms".format(round(omen_bot.latency * 1000)))
         logger.info("Bot is ready!")
         return
 
     # Run bot
-    omen_bot.run(args.discord_token)
+    omen_bot.run(token=args.discord_token)

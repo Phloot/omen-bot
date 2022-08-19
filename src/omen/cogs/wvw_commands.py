@@ -37,5 +37,5 @@ class WVWCommands(commands.Cog):
 
         await ctx.channel.send(embed=embed)
 
-def setup(omen_bot):
-    omen_bot.add_cog(WVWCommands(omen_bot))
+async def setup(omen_bot):
+    await omen_bot.add_cog(WVWCommands(omen_bot))

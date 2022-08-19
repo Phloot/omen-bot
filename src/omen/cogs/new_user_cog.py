@@ -60,5 +60,5 @@ class NewUserCog(commands.Cog):
             self.logger.warning("Failed to direct message new user ({0})".format(str(gen_ex)))
 
 
-def setup(omen_bot):
-    omen_bot.add_cog(NewUserCog(omen_bot))
+async def setup(omen_bot):
+    await omen_bot.add_cog(NewUserCog(omen_bot))
