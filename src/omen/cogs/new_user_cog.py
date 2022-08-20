@@ -2,7 +2,7 @@
 import discord
 import logging
 from discord.ext import commands
-from functions import return_config
+from functions import return_config, attach_image
 
 """
 Cog: NewUserCog
@@ -18,6 +18,8 @@ class NewUserCog(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member):
         channel = member.guild.system_channel
+        author_img = attach_image("icon_author_co.jpg")
+        thumbnail_img = attach_image("thumbnail_co.gif")
 
         # Send a welcome message to the system channel
         if channel is not None:
@@ -26,8 +28,8 @@ class NewUserCog(commands.Cog):
         
         # Send a direct message to the user
         embed=discord.Embed(title="Celestial Omen", description="A Crystal Desert community guild for pugs and pugmanders", color=0x2974ff)
-        embed.set_author(name="Omen", icon_url="https://i.imgur.com/mJHFxWq.png")
-        embed.set_thumbnail(url="https://i.imgur.com/xR7N7aQ.gif")
+        embed.set_author(name="Omen", icon_url="attachment://icon_author_co.jpg")
+        embed.set_thumbnail(url="attachment://thumbnail_co.gif")
         embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on off-hours raiding\
             and content. We aim to bring together pugs and pugmanders from all sorts of timezones and guilds so as to build\
             a formidable force outside of the standard NA timezone raids.", inline=False)
@@ -42,7 +44,7 @@ class NewUserCog(commands.Cog):
         embed.set_footer(text="Thanks, [CO] leadership team")
 
         try:
-            await member.send(embed=embed)
+            await member.send(files=[author_img, thumbnail_img], embed=embed)
         except discord.Forbidden:
             self.logger.warning(f"{member} is not accepting direct messages at this time")
         except discord.DiscordException as gen_ex:
