@@ -27,6 +27,14 @@ def to_lower(argument):
 def attach_image(local_image_name):
     return discord.File(f"assets/{local_image_name}", filename=local_image_name)
 
+# Return hours, minutes, and seconds from a timedelta object
+def convert_timedelta(duration):
+    days, seconds = duration.days, duration.seconds
+    hours = days * 24 + seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = (seconds % 60)
+    return hours, minutes, seconds
+
 # Function to generate MD5 checksum of file
 def md5_check(file_content):
     md5_hash = hashlib.md5()

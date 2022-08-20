@@ -3,6 +3,7 @@ import discord
 import logging
 import logging.config
 import argparse
+import datetime
 import json
 import sys
 import os
@@ -56,12 +57,13 @@ if __name__ == "__main__":
 
     @omen_bot.event
     async def on_ready():
+        omen_bot.start_time = datetime.datetime.now()
         await omen_bot.change_presence(
             activity=discord.Activity(type=discord.ActivityType.watching, name="over CO")
         )
-        await load_cogs()
         logger.info(f"Name: {omen_bot.user.name}")
         logger.info(f"ID: {omen_bot.user.id}")
+        await load_cogs()
         logger.info(f"Ping: {round(omen_bot.latency * 1000)}ms")
         logger.info("Bot is ready!")
         return
