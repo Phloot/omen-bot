@@ -41,10 +41,10 @@ if __name__ == "__main__":
         # Load cogs
         for file in os.listdir(cog_path):
             if file.endswith('.py'):
-                await omen_bot.load_extension("cogs.{0}".format(file.replace(".py", "")))
+                await omen_bot.load_extension(f"cogs.{file.replace('.py', '')}")
                 cog_counter+=1
 
-        logger.info("Cog(s): {0}".format(cog_counter))
+        logger.info(f"Cog(s): {cog_counter}")
 
     # For exceptions caused through decorator perms, we need
     # to use a custom error handler as the library does not
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     @omen_bot.event
     async def on_command_error(ctx, error):
         if isinstance(error, NotOwner):
-            logger.warning("{0} attempted to execute command restricted to bot owner".format(ctx.author.name))
+            logger.warning(f"{ctx.author.name} attempted to execute command restricted to bot owner")
 
     @omen_bot.event
     async def on_ready():
@@ -60,9 +60,9 @@ if __name__ == "__main__":
             activity=discord.Activity(type=discord.ActivityType.watching, name="over CO")
         )
         await load_cogs()
-        logger.info("Name: {0}".format(omen_bot.user.name))
-        logger.info("ID: {0}".format(omen_bot.user.id))
-        logger.info("Ping: {0}ms".format(round(omen_bot.latency * 1000)))
+        logger.info(f"Name: {omen_bot.user.name}")
+        logger.info(f"ID: {omen_bot.user.id}")
+        logger.info(f"Ping: {round(omen_bot.latency * 1000)}ms")
         logger.info("Bot is ready!")
         return
 
