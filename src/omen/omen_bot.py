@@ -29,6 +29,7 @@ if __name__ == "__main__":
     intents = discord.Intents.default()
     intents.members = True
     intents.presences = True
+    intents.message_content = True
     omen_bot = commands.Bot(command_prefix='!', intents=intents)
 
     # Load cogs
