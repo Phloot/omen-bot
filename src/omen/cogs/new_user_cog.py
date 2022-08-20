@@ -21,13 +21,8 @@ class NewUserCog(commands.Cog):
 
         # Send a welcome message to the system channel
         if channel is not None:
-            await channel.send('Welcome to [CO], {0.mention}! Please check out {1.mention} to choose roles and {2.mention} if you\'re looking for squad builds.'.format
-            (
-                member,
-                self.omen_bot.get_channel(self.configs['discord_channels']['role_selection']),
-                self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']),
-                )
-            )
+            await channel.send(f"Welcome to [CO], {member.mention}! Please check out {self.omen_bot.get_channel(self.configs['discord_channels']['role_selection']).mention} \
+            to choose roles and {self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']).mention} if you're looking for squad builds.")
         
         # Send a direct message to the user
         embed=discord.Embed(title="Celestial Omen", description="A Crystal Desert community guild for pugs and pugmanders", color=0x2974ff)
@@ -36,29 +31,23 @@ class NewUserCog(commands.Cog):
         embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on off-hours raiding\
             and content. We aim to bring together pugs and pugmanders from all sorts of timezones and guilds so as to build\
             a formidable force outside of the standard NA timezone raids.", inline=False)
-        embed.add_field(name="Join the Community", value="We're always open to welcome in new members, and with our minimal\
+        embed.add_field(name="Join the Community", value=f"We're always open to welcome in new members, and with our minimal\
             requirements, you may find that [CO] is the perfect complement to your primary NA timezone guild. Interested\
-            in joining the squad? Check out {0.mention} for details.".format
-            (
-                self.omen_bot.get_channel(self.configs['discord_channels']['join_channel'])
-                ), inline=False
+            in joining the squad? Check out {self.omen_bot.get_channel(self.configs['discord_channels']['join_channel']).mention} for details.", inline=False
             )
-        embed.add_field(name="Additional Info", value="If you have any questions about your class, or would like to have 1 on 1\
+        embed.add_field(name="Additional Info", value=f"If you have any questions about your class, or would like to have 1 on 1\
             discussions about the classes that you play, we'd love to help. Feel free to reach out to any **__Organizer__** or \
-            **__Advisor__** for info, and check out {0.mention} for helpful builds.".format
-            (
-                self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds'])
-                )
+            **__Advisor__** for info, and check out {self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']).mention} for helpful builds."
             )
         embed.set_footer(text="Thanks, [CO] leadership team")
 
         try:
             await member.send(embed=embed)
         except discord.Forbidden:
-            self.logger.warning("{0} is not accepting direct messages at this time".format(member))
+            self.logger.warning(f"{member} is not accepting direct messages at this time")
         except discord.DiscordException as gen_ex:
-            self.logger.warning("Failed to direct message new user ({0})".format(str(gen_ex)))
+            self.logger.warning(f"Failed to direct message new user ({str(gen_ex)})")
 
 
-def setup(omen_bot):
-    omen_bot.add_cog(NewUserCog(omen_bot))
+async def setup(omen_bot):
+    await omen_bot.add_cog(NewUserCog(omen_bot))

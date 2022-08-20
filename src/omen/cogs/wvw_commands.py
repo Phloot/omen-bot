@@ -27,7 +27,7 @@ class WVWCommands(commands.Cog):
             bar_color = 0xffd700
             world_list_region = [world for world in world_list_all if world['id'] > 2000]
         
-        embed=discord.Embed(title="{0} Server Populations".format(region.upper()), color=bar_color)
+        embed=discord.Embed(title=f"{region.upper()} Server Populations", color=bar_color)
         embed.set_thumbnail(url=flag_thumb)
         embed.add_field(name=":red_circle: Full", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Full"]))
         embed.add_field(name=":orange_circle: Very High", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "VeryHigh"]))
@@ -37,5 +37,5 @@ class WVWCommands(commands.Cog):
 
         await ctx.channel.send(embed=embed)
 
-def setup(omen_bot):
-    omen_bot.add_cog(WVWCommands(omen_bot))
+async def setup(omen_bot):
+    await omen_bot.add_cog(WVWCommands(omen_bot))

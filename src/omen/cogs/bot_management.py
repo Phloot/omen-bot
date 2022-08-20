@@ -19,10 +19,10 @@ class BotManagement(commands.Cog):
 
         for file in os.listdir(cog_path):
             if file.endswith('.py'):
-                self.omen_bot.reload_extension("cogs.{0}".format(file.replace(".py", "")))
+                await self.omen_bot.reload_extension(f"cogs.{file.replace('.py', '')}")
                 cog_counter+=1
 
-        await ctx.channel.send("Reloaded {0} cog(s)".format(cog_counter))
+        await ctx.channel.send(f"Reloaded {cog_counter} cog(s)")
 
-def setup(omen_bot):
-    omen_bot.add_cog(BotManagement(omen_bot))
+async def setup(omen_bot):
+    await omen_bot.add_cog(BotManagement(omen_bot))

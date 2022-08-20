@@ -18,12 +18,7 @@ class GW2Wrapper(object):
     # Internal URL builder function
     def _url_builder(self, endpoint, *args, **kwargs):
         params = kwargs.get("addl_params", "")
-        return "{0}/{1}/{2}{3}".format(
-            self.configs['gw2_api_config']['api_base_path'], 
-            self.configs['gw2_api_config']['api_version'],
-            endpoint,
-            params
-            ) 
+        return f"{self.configs['gw2_api_config']['api_base_path']}/{self.configs['gw2_api_config']['api_version']}/{endpoint}{params}"
 
     # Internal general request function
     def _api_request(self, url):
