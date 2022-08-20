@@ -3,6 +3,7 @@ import os
 import sys
 import discord
 import logging
+import platform
 from discord.ext import commands
 
 class BotManagement(commands.Cog):
@@ -23,6 +24,10 @@ class BotManagement(commands.Cog):
                 cog_counter+=1
 
         await ctx.channel.send(f"Reloaded {cog_counter} cog(s)")
+
+    #@commands.command()
+    #@commands.is_owner()
+    #async def sysinfo(self, ctx, *, member: discord.Member = None):
 
 async def setup(omen_bot):
     await omen_bot.add_cog(BotManagement(omen_bot))

@@ -1,6 +1,8 @@
 # src/functions.py
 import os
 import json
+from threading import local
+import discord
 import logging
 import hashlib
 
@@ -20,6 +22,10 @@ def return_config():
 # Helper function to convert args to lowercase
 def to_lower(argument):
     return argument.lower()
+
+# Function to assist in embedding local images
+def attach_image(local_image_name):
+    return discord.File(f"assets/{local_image_name}", filename=local_image_name)
 
 # Function to generate MD5 checksum of file
 def md5_check(file_content):
