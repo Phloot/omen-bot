@@ -29,6 +29,5 @@ class BotManagement(commands.Cog):
     #@commands.is_owner()
     #async def sysinfo(self, ctx, *, member: discord.Member = None):
 
-
 async def setup(omen_bot):
     await omen_bot.add_cog(BotManagement(omen_bot))
