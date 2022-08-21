@@ -15,5 +15,9 @@ class GuildOrganizationCog(commands.Cog):
         self.configs = return_config()
         self.logger = logging.getLogger("omen_bot_logger")
 
+    @commands.command()
+    async def schedule(self, ctx, *, member: discord.Member = None):
+        return
+
 async def setup(omen_bot):
     await omen_bot.add_cog(GuildOrganizationCog(omen_bot))
