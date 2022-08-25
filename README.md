@@ -1,6 +1,6 @@
 # Omen Bot
 
-[![GitHub release](https://img.shields.io/github/release/phloot/omen-bot.svg?style=flat-square)](https://github.com/docker/login-action/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/phloot/omen-bot.svg?style=flat-square)](https://github.com/Phloot/omen-bot/releases/latest)
 [![CodeQL](https://github.com/Phloot/omen-bot/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Phloot/omen-bot/actions/workflows/codeql-analysis.yml)
 [![ci](https://github.com/Phloot/omen-bot/actions/workflows/docker-ci.yml/badge.svg)](https://github.com/Phloot/omen-bot/actions/workflows/docker-ci.yml)
 [![Discord](https://discordapp.com/api/guilds/840265739884560384/widget.png)](https://discord.gg/Y3VkTCdV4b)
