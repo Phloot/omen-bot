@@ -54,6 +54,11 @@ class BotManagement(commands.Cog):
         # Fetch version
         info['version'] = self.configs['internal']['version']
 
+        # Fill in missing data
+        for k, v in info.items():
+            if v == "":
+                info[k] = "Unknown"
+
         # Build and send embed
         author_img = attach_image(author_thumb)
         embed=discord.Embed(title="Bot Info", color=0xf0f0f0)
