@@ -49,7 +49,7 @@ class BotManagement(commands.Cog):
         # Generate uptime
         time_diff = datetime.now() - self.omen_bot.start_time
         hours, minutes, seconds = convert_timedelta(time_diff)
-        info['uptime'] = f"{time_diff.days}d {int(hours)}h {int(minutes)}m"
+        info['uptime'] = f"{time_diff.days}d {int(hours) - (time_diff.days * 24)}h {int(minutes)}m"
         
         # Fetch version
         info['version'] = self.configs['internal']['version']
