@@ -23,7 +23,7 @@ class NewUserCog(commands.Cog):
 
         # Send a welcome message to the system channel
         if channel is not None:
-            await channel.send(f"Welcome to [CO], {member.mention}! Please check out {self.omen_bot.get_channel(self.configs['discord_channels']['role_selection']).mention} \
+            await channel.send(f"Welcome to [CO], {member.mention}! Please check out {self.omen_bot.get_channel(self.configs['discord_channels']['role_selection']).mention}\
                 to choose roles and {self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']).mention} if you're looking for squad builds.")
         
         # Send a direct message to the user
