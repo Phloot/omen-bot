@@ -30,16 +30,12 @@ class NewUserCog(commands.Cog):
         embed=discord.Embed(title="Celestial Omen", description="A Crystal Desert community guild for pugs and pugmanders", color=0x2974ff)
         embed.set_author(name="Omen", icon_url="attachment://icon_author_co.jpg")
         embed.set_thumbnail(url="attachment://thumbnail_co.gif")
-        embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on off-hours raiding\
-            and content. We aim to bring together pugs and pugmanders from all sorts of timezones and guilds so as to build\
-            a formidable force outside of the standard NA timezone raids.", inline=False)
+        embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on WvW raids\
+            , with a focus on fighting. We aim to bring together pugs and pugmanders from all sorts of timezones and guilds so as to build\
+            a formidable force within and outside of the standard NA timezone raids.", inline=False)
         embed.add_field(name="Join the Community", value=f"We're always open to welcome in new members, and with our minimal\
-            requirements, you may find that [CO] is the perfect complement to your primary NA timezone guild. Interested\
+            requirements, you may find that [CO] is the perfect complement to your primary guild if you already have one. Interested\
             in joining the squad? Check out {self.omen_bot.get_channel(self.configs['discord_channels']['join_channel']).mention} for details.", inline=False
-            )
-        embed.add_field(name="Additional Info", value=f"If you have any questions about your class, or would like to have 1 on 1\
-            discussions about the classes that you play, we'd love to help. Feel free to reach out to any **__Organizer__** or \
-            **__Advisor__** for info, and check out {self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']).mention} for helpful builds."
             )
         embed.set_footer(text="Thanks, [CO] leadership team")
 
