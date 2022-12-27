@@ -21,6 +21,8 @@
         "page_size": "200"
     },
     "gw2_endpoints": {
-        "worlds": "worlds"
+        "account": "account",
+        "worlds": "worlds",
+        "wvw_matches": "wvw/matches"
     }
 }
