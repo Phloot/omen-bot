@@ -1,4 +1,4 @@
-# src/cogs/new_user_cog.py
+# src/cogs/account_cog.py
 import discord
 import logging
 from discord.ext import commands
@@ -17,9 +17,9 @@ class AccountCog(commands.Cog):
         self.logger = logging.getLogger("omen_bot_logger")
         self.gw2_api = GW2Wrapper()
 
-    @commands.command()
-    async def account(self, ctx, member: discord.Member = None):
-        self.logger.warning(f"{self.gw2_api.account()}")
+    # @commands.command()
+    # async def account(self, ctx, member: discord.Member = None):
+    #     self.logger.warning(f"{self.gw2_api.account()}")
 
 
 async def setup(omen_bot):

@@ -7,6 +7,7 @@ import discord
 import logging
 import hashlib
 
+
 logger = logging.getLogger("omen_bot_logger")
 
 # Reusable function to pull in config
