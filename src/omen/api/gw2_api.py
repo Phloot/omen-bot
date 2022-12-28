@@ -30,8 +30,10 @@ class GW2Wrapper(object):
     def objectives(self, objective):
         return self._api_request(self._url_builder(self.configs['gw2_endpoints']['objectives'], addl_params=f"?id={objective}"))
 
-    def worlds(self):
-        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds'], addl_params="?ids=all"))
+    # Accepts no arguments for all worlds, or list of args for 1 or more
+    def worlds(self, ids: list = None):
+        id_string = ','.join([str(i) for i in ids]) if ids else None
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds'], addl_params="?ids=all" if not id_string else f"?ids={id_string}"))
 
     def wvw_matches(self, world):
         return self._api_request(self._url_builder(self.configs['gw2_endpoints']['wvw_matches'], addl_params=f"?world={world}"))

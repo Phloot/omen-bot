@@ -16,29 +16,122 @@ class WVWCommands(commands.Cog):
         self.gw2_api = GW2Wrapper()
         self.img_world_population = "world_population.png"
 
-    async def get_current_victory_points(self):
+        # Internal dictionary to house match data - not required, but helpful to visualize
+        self.match_data_dict = {
+            'blue': {
+                'worlds': {
+                    'host': '',
+                    'link': ''
+                },
+                'victory_points': '',
+                'kd': {
+                    'kills': 0,
+                    'deaths': 0,
+                    'kdr': 0
+                },
+                'objectives': {
+                    'camp': 0,
+                    'tower': 0,
+                    'keep': 0,
+                    'castle': 0
+                }
+            },
+            'green': {
+                'worlds': {
+                    'host': '',
+                    'link': ''
+                },
+                'victory_points': '',
+                'kd': {
+                    'kills': 0,
+                    'deaths': 0,
+                    'kdr': 0
+                },
+                'objectives': {
+                    'camp': 0,
+                    'tower': 0,
+                    'keep': 0,
+                    'castle': 0
+                }
+            },
+            'red': {
+                'worlds': {
+                    'host': '',
+                    'link': ''
+                },
+                'victory_points': '',
+                'kd': {
+                    'kills': 0,
+                    'deaths': 0,
+                    'kdr': 0
+                },
+                'objectives': {
+                    'camp': 0,
+                    'tower': 0,
+                    'keep': 0,
+                    'castle': 0
+                },
+            }
+        }
+
+    # Populate class dictionary with VP data
+    async def get_current_victory_points(self, match_data):
+        try:
+            for server, points in match_data['victory_points'].items():
+                self.match_data_dict[server]['victory_points'] = str(points)
+        except Exception as e:
+            print(e)
+
+    # Populate class dictionary with K/D data
+    async def get_current_kdr(self, match_data):
+        # Collect kills
+        for server, k_or_d in match_data['kills'].items():
+            self.match_data_dict[server]['kd']['kills'] = k_or_d
+
+        # Collect deaths
+        for server, k_or_d in match_data['deaths'].items():
+            self.match_data_dict[server]['kd']['deaths'] = k_or_d
+
+        # Calc and store KDR
+        for server, data in self.match_data_dict.items():
+            try:
+                self.match_data_dict[server]['kd']['kdr'] = round(data['kd']['kills'] / data['kd']['deaths'], 2)
+            except:
+                self.match_data_dict[server]['kd']['kdr'] = 'Unknown'
+
+    # Populate class dictionary with server data
+    async def get_current_match_servers(self, match_data):
+        for server, ids in match_data['all_worlds'].items():
+            self.match_data_dict[server]['worlds']['host'] = self.gw2_api.worlds([ids[1]])[0]['name']
+            self.match_data_dict[server]['worlds']['link'] = self.gw2_api.worlds([ids[0]])[0]['name']
+
+    # Populate class dictionary with owned objectives data
+    async def get_owned_objectives(self):
         return
 
-    async def get_current_kdr(self):
-        return
-
-    async def get_current_match_servers(self):
-        return
-
+    # Generic function to get full WvW data for current match
     async def get_current_match_data(self):
         return self.gw2_api.wvw_matches(await self.get_current_world())
 
+    # Return current world for Rall
     async def get_current_world(self):
         return self.gw2_api.account()['world']
 
     @commands.command()
     async def matchup(self, ctx, member: discord.Member = None):
+        # Retrieve match data
+        match_data = await self.get_current_match_data()
+        servers = await self.get_current_match_servers(match_data)
+        await self.get_current_match_servers(match_data)
+        await self.get_current_victory_points(match_data)
+        await self.get_current_kdr(match_data)
+        print(self.match_data_dict)
+        
         # Current victory points for each server
 
         # Current k/d for each server
 
         # Current objectives for each server
-        await self.build_objectives_dictionary()
         return
     
     @commands.command()
