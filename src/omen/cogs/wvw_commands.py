@@ -36,6 +36,10 @@ class WVWCommands(commands.Cog):
                     'tower': 0,
                     'keep': 0,
                     'castle': 0
+                },
+                "skirmish": {
+                    'total_points': 0,
+                    'ppt': 0
                 }
             },
             'green': {
@@ -54,6 +58,10 @@ class WVWCommands(commands.Cog):
                     'tower': 0,
                     'keep': 0,
                     'castle': 0
+                },
+                "skirmish": {
+                    'total_points': 0,
+                    'ppt': 0
                 }
             },
             'red': {
@@ -73,6 +81,10 @@ class WVWCommands(commands.Cog):
                     'keep': 0,
                     'castle': 0
                 },
+                "skirmish": {
+                    'total_points': 0,
+                    'ppt': 0
+                }
             }
         }
 
@@ -117,6 +129,7 @@ class WVWCommands(commands.Cog):
         # We need to reset values in the self dict before proceeding since we are counting
         for s in self.server_colors:
             self.match_data_dict[s]['objectives'] = self.match_data_dict[s]['objectives'].fromkeys(self.match_data_dict[s]['objectives'], 0)
+            self.match_data_dict[s]['skirmish']['ppt'] = 0
 
         objectives_to_count = [ 'camp', 'tower', 'keep', 'castle' ]
         map_count = len(match_data['maps'])
@@ -129,7 +142,7 @@ class WVWCommands(commands.Cog):
             while obj_iter < obj_count:
                 obj_owner = match_data['maps'][map_iter]['objectives'][obj_iter]['owner'].lower()
                 obj_type = match_data['maps'][map_iter]['objectives'][obj_iter]['type'].lower()
-
+                self.match_data_dict[obj_owner]['skirmish']['ppt'] += match_data['maps'][map_iter]['objectives'][obj_iter]['points_tick']
                 try:
                     if obj_type in objectives_to_count: self.match_data_dict[obj_owner]['objectives'][obj_type] += 1
                 except Exception as e:
@@ -140,6 +153,11 @@ class WVWCommands(commands.Cog):
     # Return tier for current matchup
     async def get_current_tier(self, match_data):
         self.match_data_dict['tier'] = match_data['id'].split('-')[1]
+
+    # Return current skirmish points
+    async def get_current_skirmish_points(self, match_data):
+        for s in self.server_colors:
+            self.match_data_dict[s]['skirmish']['total_points'] = match_data['skirmishes'][-1]['scores'][s]
 
     # Generic function to get full WvW data for current match
     async def get_current_match_data(self):
@@ -167,6 +185,7 @@ class WVWCommands(commands.Cog):
         icon_image = "icon_author_co.jpg" 
         thumb_image = "wvw_thumbnail.png" 
         embed_obj_value_string = ""
+        embed_skirmish_value_string = ""
         
         author_img_attached = attach_image("icon_author_co.jpg")
         thumb_img_attached = attach_image("wvw_thumbnail.png")
@@ -186,25 +205,31 @@ class WVWCommands(commands.Cog):
 
             # Current objectives for each server
             await self.get_owned_objectives(match_data)
+
+            # Current skirmish points
+            await self.get_current_skirmish_points(match_data)
         else:
             self.logger.error(f"Match data currently unavailable. API may be down!")
         
-        embed=discord.Embed(title="Current Matchup", url="https://wvwintel.com/#1014", description=f"Tier {self.match_data_dict['tier']}", color=0xa8009a)
-        embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
-        embed.set_thumbnail(url=f"attachment://{thumb_image}")
-        for server in self.server_colors:
-            embed.add_field(
-                name=f":{server}_circle: {server.title()}", 
-                value=f"{self.match_data_dict[server]['worlds']['host']}\n{self.match_data_dict[server]['worlds']['link']}\n\n"
-                f"**Victory Points**: {self.match_data_dict[server]['victory_points']}\n**K/D**: {self.match_data_dict[server]['kd']['kdr']}", 
-                inline=True
-            )
-            embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
-        embed.add_field(name="Current Skirmish", value="blah blah", inline=False)
-        embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
-        embed.set_footer(text="Data as of TBD")
-        await ctx.channel.send(files=[author_img_attached, thumb_img_attached], embed=embed)
-    
+        try:
+            embed=discord.Embed(title="Current Matchup", url="https://wvwintel.com/#1014", description=f"__Tier {self.match_data_dict['tier']}__", color=0xa8009a)
+            embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
+            embed.set_thumbnail(url=f"attachment://{thumb_image}")
+            for server in self.server_colors:
+                embed.add_field(
+                    name=f":{server}_circle: {server.title()}", 
+                    value=f"{self.match_data_dict[server]['worlds']['host']}\n{self.match_data_dict[server]['worlds']['link']}\n\n"
+                    f"**Victory Points**: {self.match_data_dict[server]['victory_points']}\n**K/D**: {self.match_data_dict[server]['kd']['kdr']}", 
+                    inline=True
+                )
+                embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
+                embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['total_points']:=2} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
+            embed.add_field(name="Current Skirmish", value=embed_skirmish_value_string, inline=False)
+            embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
+            await ctx.channel.send(files=[author_img_attached, thumb_img_attached], embed=embed)
+        except Exception as e:
+            print(e)
+
     @commands.command()
     async def worldpop(self, ctx, region: to_lower="na", member: discord.Member = None):
         img_flag = f"flag_{region}.png"
