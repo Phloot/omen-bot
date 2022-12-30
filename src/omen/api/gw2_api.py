@@ -22,11 +22,18 @@ class GW2Wrapper(object):
 
     # Internal general request function
     def _api_request(self, url):
-        response = session.get(url)
-        return response.json()
+        return session.get(url).json()
 
-    def worlds(self):
-        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds'], addl_params="?ids=all"))
+    def account(self):
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['account']))
+    
+    def objectives(self, objective):
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['objectives'], addl_params=f"?id={objective}"))
 
-    def wvw_matches(self):
-        pass
+    # Accepts no arguments for all worlds, or list of args for 1 or more
+    def worlds(self, ids: list = None):
+        id_string = ','.join([str(i) for i in ids]) if ids else None
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['worlds'], addl_params="?ids=all" if not id_string else f"?ids={id_string}"))
+
+    def wvw_matches(self, world):
+        return self._api_request(self._url_builder(self.configs['gw2_endpoints']['wvw_matches'], addl_params=f"?world={world}"))

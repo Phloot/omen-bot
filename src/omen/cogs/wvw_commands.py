@@ -3,6 +3,7 @@ import os
 import sys
 import discord
 import logging
+import json
 from discord.ext import commands
 from functions import to_lower, attach_image
 
@@ -14,7 +15,221 @@ class WVWCommands(commands.Cog):
         self.logger = logging.getLogger("omen_bot_logger")
         self.gw2_api = GW2Wrapper()
         self.img_world_population = "world_population.png"
-    
+        self.server_colors = [ 'green', 'blue', 'red' ]
+
+        # Internal dictionary to house match data - not required, but helpful to visualize
+        self.match_data_dict = {
+            'tier': '',
+            'blue': {
+                'worlds': {
+                    'host': '',
+                    'link': ''
+                },
+                'victory_points': 0,
+                'kd': {
+                    'kills': 0,
+                    'deaths': 0,
+                    'kdr': 0
+                },
+                'objectives': {
+                    'camp': 0,
+                    'tower': 0,
+                    'keep': 0,
+                    'castle': 0
+                },
+                "skirmish": {
+                    'total_points': 0,
+                    'ppt': 0
+                }
+            },
+            'green': {
+                'worlds': {
+                    'host': '',
+                    'link': ''
+                },
+                'victory_points': 0,
+                'kd': {
+                    'kills': 0,
+                    'deaths': 0,
+                    'kdr': 0
+                },
+                'objectives': {
+                    'camp': 0,
+                    'tower': 0,
+                    'keep': 0,
+                    'castle': 0
+                },
+                "skirmish": {
+                    'total_points': 0,
+                    'ppt': 0
+                }
+            },
+            'red': {
+                'worlds': {
+                    'host': '',
+                    'link': ''
+                },
+                'victory_points': 0,
+                'kd': {
+                    'kills': 0,
+                    'deaths': 0,
+                    'kdr': 0
+                },
+                'objectives': {
+                    'camp': 0,
+                    'tower': 0,
+                    'keep': 0,
+                    'castle': 0
+                },
+                "skirmish": {
+                    'total_points': 0,
+                    'ppt': 0
+                }
+            }
+        }
+
+    # Populate class dictionary with VP data
+    async def get_current_victory_points(self, match_data):
+        for server, points in match_data['victory_points'].items():
+            try:
+                self.match_data_dict[server]['victory_points'] = points
+            except Exception as e:
+                self.match_data_dict[server]['victory_points'] = self.match_data_dict[server]['victory_points']
+
+    # Populate class dictionary with K/D data
+    async def get_current_kdr(self, match_data):
+        # Collect kills
+        for server, k_or_d in match_data['kills'].items():
+            self.match_data_dict[server]['kd']['kills'] = k_or_d
+
+        # Collect deaths
+        for server, k_or_d in match_data['deaths'].items():
+            self.match_data_dict[server]['kd']['deaths'] = k_or_d
+
+        # Calc and store KDR
+        for server, data in self.match_data_dict.items():
+            try:
+                if server in [ 'blue', 'green', 'red' ]:
+                    self.match_data_dict[server]['kd']['kdr'] = round(data['kd']['kills'] / data['kd']['deaths'], 2) 
+            except Exception as e:
+                self.match_data_dict[server]['kd']['kdr'] = self.match_data_dict[server]['kd']['kdr']
+                self.logger.error(f"Unable to calculate KDR in get_current_kdr: {e}")
+
+    # Populate class dictionary with server data
+    async def get_current_match_servers(self, match_data):
+        for server, ids in match_data['all_worlds'].items():
+            try:
+                self.match_data_dict[server]['worlds']['host'] = self.gw2_api.worlds([ids[1]])[0]['name']
+                self.match_data_dict[server]['worlds']['link'] = self.gw2_api.worlds([ids[0]])[0]['name']
+            except Exception as e:
+                self.logger.error(f"Problem in get_current_match_servers: {e}")
+
+    # Populate class dictionary with owned objectives data
+    async def get_owned_objectives(self, match_data):
+        # We need to reset values in the self dict before proceeding since we are counting
+        for s in self.server_colors:
+            self.match_data_dict[s]['objectives'] = self.match_data_dict[s]['objectives'].fromkeys(self.match_data_dict[s]['objectives'], 0)
+            self.match_data_dict[s]['skirmish']['ppt'] = 0
+
+        objectives_to_count = [ 'camp', 'tower', 'keep', 'castle' ]
+        map_count = len(match_data['maps'])
+        map_iter = 0
+
+        while map_iter < map_count:
+            obj_count = len(match_data['maps'][map_iter]['objectives'])
+            obj_iter = 0
+
+            while obj_iter < obj_count:
+                obj_owner = match_data['maps'][map_iter]['objectives'][obj_iter]['owner'].lower()
+                obj_type = match_data['maps'][map_iter]['objectives'][obj_iter]['type'].lower()
+                self.match_data_dict[obj_owner]['skirmish']['ppt'] += match_data['maps'][map_iter]['objectives'][obj_iter]['points_tick']
+                try:
+                    if obj_type in objectives_to_count: self.match_data_dict[obj_owner]['objectives'][obj_type] += 1
+                except Exception as e:
+                    print(e)
+                obj_iter += 1
+            map_iter += 1
+
+    # Return tier for current matchup
+    async def get_current_tier(self, match_data):
+        self.match_data_dict['tier'] = match_data['id'].split('-')[1]
+
+    # Return current skirmish points
+    async def get_current_skirmish_points(self, match_data):
+        for s in self.server_colors:
+            self.match_data_dict[s]['skirmish']['total_points'] = match_data['skirmishes'][-1]['scores'][s]
+
+    # Generic function to get full WvW data for current match
+    async def get_current_match_data(self):
+        try:
+            return self.gw2_api.wvw_matches(await self.get_current_world())
+        except Exception as e:
+            self.logger.error(f"Unable to retrieve data in get_current_match_data: {e}")
+            return None
+
+    # Return current world for Rall
+    async def get_current_world(self):
+        try:
+            return self.gw2_api.account()['world']
+        except Exception as e:
+            self.logger.error(f"Unable to retrieve data in get_current_world: {e}")
+            return '1014'
+
+    @commands.command()
+    async def matchup(self, ctx, member: discord.Member = None):
+        # General variables
+        camp_emoji = "<:wvw_camp:1058165536334303272>"
+        tower_emoji = "<:wvw_tower:1058167072762384414>"
+        keep_emoji = "<:wvw_keep:1058165533532500108>"
+        castle_emoji = "<:wvw_castle:1058165532366487572>"
+        icon_image = "icon_author_co.jpg" 
+        thumb_image = "wvw_thumbnail.png" 
+        embed_obj_value_string = ""
+        embed_skirmish_value_string = ""
+        
+        author_img_attached = attach_image("icon_author_co.jpg")
+        thumb_img_attached = attach_image("wvw_thumbnail.png")
+
+        # Retrieve match data and set initial data in dict
+        match_data = await self.get_current_match_data()
+
+        if match_data:
+            await self.get_current_match_servers(match_data)
+            await self.get_current_tier(match_data)
+                    
+            # Current victory points for each server
+            await self.get_current_victory_points(match_data)
+
+            # Current k/d for each server
+            await self.get_current_kdr(match_data)
+
+            # Current objectives for each server
+            await self.get_owned_objectives(match_data)
+
+            # Current skirmish points
+            await self.get_current_skirmish_points(match_data)
+        else:
+            self.logger.error(f"Match data currently unavailable. API may be down!")
+        
+        try:
+            embed=discord.Embed(title="Current Matchup", url="https://wvwintel.com/#1014", description=f"__Tier {self.match_data_dict['tier']}__", color=0xa8009a)
+            embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
+            embed.set_thumbnail(url=f"attachment://{thumb_image}")
+            for server in self.server_colors:
+                embed.add_field(
+                    name=f":{server}_circle: {server.title()}", 
+                    value=f"{self.match_data_dict[server]['worlds']['host']}\n{self.match_data_dict[server]['worlds']['link']}\n\n"
+                    f"**Victory Points**: {self.match_data_dict[server]['victory_points']}\n**K/D**: {self.match_data_dict[server]['kd']['kdr']}", 
+                    inline=True
+                )
+                embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
+                embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['total_points']:=2} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
+            embed.add_field(name="Current Skirmish", value=embed_skirmish_value_string, inline=False)
+            embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
+            await ctx.channel.send(files=[author_img_attached, thumb_img_attached], embed=embed)
+        except Exception as e:
+            print(e)
+
     @commands.command()
     async def worldpop(self, ctx, region: to_lower="na", member: discord.Member = None):
         img_flag = f"flag_{region}.png"

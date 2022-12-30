@@ -1,6 +1,6 @@
 {
     "internal": {
-        "version": "v1.0.4"
+        "version": "v1.1.0"
     },
     "authentication": {
         "gw2_token": "84CF4DFD-D23B-9D4D-A94D-918A33DD0F8FA692141E-717C-440B-94EA-485BE23F3D1D"
@@ -21,6 +21,648 @@
         "page_size": "200"
     },
     "gw2_endpoints": {
-        "worlds": "worlds"
-    }
+        "account": "account",
+        "objectives": "wvw/objectives",
+        "worlds": "worlds",
+        "wvw_matches": "wvw/matches"
+    },
+    "wvw_objectives": {
+        "38-131": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Hill",
+            "sector_id": 850,
+            "type": "Spawn"
+        },
+        "38-20": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Veloka Slope",
+            "sector_id": 891,
+            "type": "Tower"
+        },
+        "38-10": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Rogue's Quarry",
+            "sector_id": 851,
+            "type": "Camp"
+        },
+        "38-9": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Stonemist Castle",
+            "sector_id": 833,
+            "type": "Castle"
+        },
+        "38-4": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Golanta Clearing",
+            "sector_id": 849,
+            "type": "Camp"
+        },
+        "38-6": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Speldan Clearcut",
+            "sector_id": 844,
+            "type": "Camp"
+        },
+        "38-124": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Hill",
+            "sector_id": 845,
+            "type": "Spawn"
+        },
+        "38-11": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Aldon's Ledge",
+            "sector_id": 882,
+            "type": "Tower"
+        },
+        "38-12": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Wildcreek Run",
+            "sector_id": 885,
+            "type": "Tower"
+        },
+        "38-5": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Pangloss Rise",
+            "sector_id": 846,
+            "type": "Camp"
+        },
+        "38-16": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Quentin Lake",
+            "sector_id": 889,
+            "type": "Tower"
+        },
+        "38-8": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Umberglade Woods",
+            "sector_id": 835,
+            "type": "Camp"
+        },
+        "38-1": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Overlook",
+            "sector_id": 843,
+            "type": "Keep"
+        },
+        "38-123": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Molevekian Delve",
+            "sector_id": 847,
+            "type": "Mercenary"
+        },
+        "38-22": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Bravost Escarpment",
+            "sector_id": 886,
+            "type": "Tower"
+        },
+        "38-126": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Darkrait Inlet",
+            "sector_id": 842,
+            "type": "Mercenary"
+        },
+        "38-17": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Mendon's Gap",
+            "sector_id": 890,
+            "type": "Tower"
+        },
+        "38-14": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Klovan Gully",
+            "sector_id": 884,
+            "type": "Tower"
+        },
+        "38-125": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Orgath Uplands",
+            "sector_id": 841,
+            "type": "Mercenary"
+        },
+        "38-19": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Ogrewatch Cut",
+            "sector_id": 892,
+            "type": "Tower"
+        },
+        "38-3": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Lowlands",
+            "sector_id": 848,
+            "type": "Keep"
+        },
+        "38-130": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Hill",
+            "sector_id": 836,
+            "type": "Spawn"
+        },
+        "38-21": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Durios Gulch",
+            "sector_id": 888,
+            "type": "Tower"
+        },
+        "38-18": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Anzalias Pass",
+            "sector_id": 893,
+            "type": "Tower"
+        },
+        "38-2": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Valley",
+            "sector_id": 834,
+            "type": "Keep"
+        },
+        "38-7": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Danelon Passage",
+            "sector_id": 837,
+            "type": "Camp"
+        },
+        "38-13": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Jerrifer's Slough",
+            "sector_id": 883,
+            "type": "Tower"
+        },
+        "38-15": {
+            "map_type": "Center",
+            "map_id": 38,
+            "name": "Langor Gulch",
+            "sector_id": 887,
+            "type": "Tower"
+        },
+        "1099-116": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Dustwhisper Well",
+            "sector_id": 1296,
+            "type": "Camp"
+        },
+        "1099-118": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Higgins's Ascent",
+            "sector_id": 1420,
+            "type": "Ruins"
+        },
+        "1099-114": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Osprey's Palace",
+            "sector_id": 1300,
+            "type": "Keep"
+        },
+        "1099-107": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Border",
+            "sector_id": 1311,
+            "type": "Spawn"
+        },
+        "1099-99": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Hamm's Lab",
+            "sector_id": 1314,
+            "type": "Camp"
+        },
+        "1099-113": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Stoic Rampart",
+            "sector_id": 1303,
+            "type": "Keep"
+        },
+        "1099-119": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Bearce's Dwelling",
+            "sector_id": 1421,
+            "type": "Ruins"
+        },
+        "1099-115": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Boettiger's Hideaway",
+            "sector_id": 1316,
+            "type": "Camp"
+        },
+        "1099-110": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Parched Outpost",
+            "sector_id": 1277,
+            "type": "Tower"
+        },
+        "1099-106": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Blistering Undercroft",
+            "sector_id": 1351,
+            "type": "Keep"
+        },
+        "1099-122": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Tilly's Encampment",
+            "sector_id": 1436,
+            "type": "Ruins"
+        },
+        "1099-105": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Crankshaft Depot",
+            "sector_id": 1354,
+            "type": "Tower"
+        },
+        "1099-102": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "O'del Academy",
+            "sector_id": 1352,
+            "type": "Tower"
+        },
+        "1099-117": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Citadel",
+            "sector_id": 1343,
+            "type": "Spawn"
+        },
+        "1099-120": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Zak's Overlook",
+            "sector_id": 1441,
+            "type": "Ruins"
+        },
+        "1099-109": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Roy's Refuge",
+            "sector_id": 1322,
+            "type": "Camp"
+        },
+        "1099-101": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "McLain's Encampment",
+            "sector_id": 1286,
+            "type": "Camp"
+        },
+        "1099-121": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Darra's Maze",
+            "sector_id": 1444,
+            "type": "Ruins"
+        },
+        "1099-104": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Eternal Necropolis",
+            "sector_id": 1308,
+            "type": "Tower"
+        },
+        "1099-108": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Border",
+            "sector_id": 1350,
+            "type": "Spawn"
+        },
+        "1099-100": {
+            "map_type": "RedHome",
+            "map_id": 1099,
+            "name": "Bauer Farmstead",
+            "sector_id": 1280,
+            "type": "Camp"
+        },
+        "95-53": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Bluevale Refuge",
+            "sector_id": 1005,
+            "type": "Camp"
+        },
+        "95-40": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Cragtop",
+            "sector_id": 1006,
+            "type": "Tower"
+        },
+        "95-35": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Bluebriar",
+            "sector_id": 1009,
+            "type": "Tower"
+        },
+        "95-36": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Redlake",
+            "sector_id": 1008,
+            "type": "Tower"
+        },
+        "95-33": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Dreadfall Bay",
+            "sector_id": 999,
+            "type": "Keep"
+        },
+        "95-111": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Citadel",
+            "sector_id": 993,
+            "type": "Spawn"
+        },
+        "95-64": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Gertzz's Estate",
+            "sector_id": 1388,
+            "type": "Ruins"
+        },
+        "95-39": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "The Titanpaw",
+            "sector_id": 998,
+            "type": "Camp"
+        },
+        "95-52": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Faithleap",
+            "sector_id": 1010,
+            "type": "Camp"
+        },
+        "95-66": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Patrick's Ascent",
+            "sector_id": 1380,
+            "type": "Ruins"
+        },
+        "95-112": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Border",
+            "sector_id": 1000,
+            "type": "Spawn"
+        },
+        "95-34": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Hero's Lodge",
+            "sector_id": 1004,
+            "type": "Camp"
+        },
+        "95-32": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Shadaran Hills",
+            "sector_id": 996,
+            "type": "Keep"
+        },
+        "95-62": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Temple of the Fallen",
+            "sector_id": 1376,
+            "type": "Ruins"
+        },
+        "95-51": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Foghaven",
+            "sector_id": 995,
+            "type": "Camp"
+        },
+        "95-37": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Garrison",
+            "sector_id": 992,
+            "type": "Keep"
+        },
+        "95-103": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Border",
+            "sector_id": 997,
+            "type": "Spawn"
+        },
+        "95-65": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Cohen's Overlook",
+            "sector_id": 1377,
+            "type": "Ruins"
+        },
+        "95-38": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Sunnyhill",
+            "sector_id": 1007,
+            "type": "Tower"
+        },
+        "95-50": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Redwater Lowlands",
+            "sector_id": 1003,
+            "type": "Camp"
+        },
+        "95-63": {
+            "map_type": "GreenHome",
+            "map_id": 95,
+            "name": "Norfolk's Hollow",
+            "sector_id": 1383,
+            "type": "Ruins"
+        },
+        "96-53": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Redvale Refuge",
+            "sector_id": 985,
+            "type": "Camp"
+        },
+        "96-40": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Dawn's Eyrie",
+            "sector_id": 987,
+            "type": "Tower"
+        },
+        "96-35": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Redbriar",
+            "sector_id": 990,
+            "type": "Tower"
+        },
+        "96-36": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Greenlake",
+            "sector_id": 989,
+            "type": "Tower"
+        },
+        "96-33": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Ascension Bay",
+            "sector_id": 973,
+            "type": "Keep"
+        },
+        "96-111": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Citadel",
+            "sector_id": 980,
+            "type": "Spawn"
+        },
+        "96-64": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Bauer's Estate",
+            "sector_id": 1374,
+            "type": "Ruins"
+        },
+        "96-39": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "The Spiritholme",
+            "sector_id": 978,
+            "type": "Camp"
+        },
+        "96-52": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Godslore",
+            "sector_id": 991,
+            "type": "Camp"
+        },
+        "96-66": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Carver's Ascent",
+            "sector_id": 1382,
+            "type": "Ruins"
+        },
+        "96-112": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Border",
+            "sector_id": 977,
+            "type": "Spawn"
+        },
+        "96-34": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Champion's Demesne",
+            "sector_id": 984,
+            "type": "Camp"
+        },
+        "96-32": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Askalion Hills",
+            "sector_id": 979,
+            "type": "Keep"
+        },
+        "96-62": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Temple of Lost Prayers",
+            "sector_id": 1381,
+            "type": "Ruins"
+        },
+        "96-51": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Stargrove",
+            "sector_id": 986,
+            "type": "Camp"
+        },
+        "96-37": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Garrison",
+            "sector_id": 976,
+            "type": "Keep"
+        },
+        "96-103": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Border",
+            "sector_id": 974,
+            "type": "Spawn"
+        },
+        "96-65": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Orchard Overlook",
+            "sector_id": 1384,
+            "type": "Ruins"
+        },
+        "96-38": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Woodhaven",
+            "sector_id": 988,
+            "type": "Tower"
+        },
+        "96-50": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Greenwater Lowlands",
+            "sector_id": 983,
+            "type": "Camp"
+        },
+        "96-63": {
+            "map_type": "BlueHome",
+            "map_id": 96,
+            "name": "Battle's Hollow",
+            "sector_id": 1386,
+            "type": "Ruins"
+        }
+    }    
 }

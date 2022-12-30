@@ -7,6 +7,7 @@ import discord
 import logging
 import hashlib
 
+
 logger = logging.getLogger("omen_bot_logger")
 
 # Reusable function to pull in config
@@ -28,7 +29,7 @@ def to_lower(argument):
 def attach_image(local_image_name):
     base_dir = os.path.abspath(sys.path[0])
     assets_path = os.path.join(base_dir, 'assets')
-    return discord.File(f"{assets_path}/{local_image_name}", filename=local_image_name)
+    return discord.File(os.path.join(assets_path, local_image_name), filename=local_image_name)
 
 # Return hours, minutes, and seconds from a timedelta object
 def convert_timedelta(duration):
