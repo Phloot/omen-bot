@@ -234,6 +234,9 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
     @app_commands.command(name="worldpop", description="Gets the world population")
     async def worldpop(self, interaction: discord.Interaction, region: str):
+        if region not in [ 'na', 'eu' ]:
+            raise commands.BadArgument(f"Invalid argument {region} provided!")
+
         img_flag = f"flag_{region}.png"
         icon_image = "icon_author_co.jpg" 
         
