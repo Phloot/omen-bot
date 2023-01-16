@@ -8,7 +8,7 @@ import json
 import sys
 import os
 from discord.ext import commands
-from discord.ext.commands import NotOwner
+from discord import app_commands
 from functions import return_config
 
 if __name__ == "__main__":
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
 
     # Initialize bot and assign intents
-    intents = discord.Intents.default()
+    intents = discord.Intents.all()
     intents.members = True
     intents.presences = True
     intents.message_content = True
@@ -48,23 +48,21 @@ if __name__ == "__main__":
 
         logger.info(f"Cog(s): {cog_counter}")
 
-    # For exceptions caused through decorator perms, we need
-    # to use a custom error handler as the library does not
-    # provide a means to handling these errors
-    @omen_bot.event
-    async def on_command_error(ctx, error):
-        if isinstance(error, NotOwner):
-            logger.warning(f"{ctx.author.name} attempted to execute command restricted to bot owner")
+    @omen_bot.tree.error
+    async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError) -> None:
+        await interaction.response.send_message(f"{interaction.user.name} failed to execute {interaction.command.name}! Reason: {error}")
 
     @omen_bot.event
     async def on_ready():
         omen_bot.start_time = datetime.datetime.now()
+        await load_cogs()
         await omen_bot.change_presence(
             activity=discord.Activity(type=discord.ActivityType.watching, name="over CO")
         )
+        synced_commands = await omen_bot.tree.sync()
+        logger.info(f"Slash commands synced: {len(synced_commands)}")
         logger.info(f"Name: {omen_bot.user.name}")
         logger.info(f"ID: {omen_bot.user.id}")
-        await load_cogs()
         logger.info(f"Ping: {round(omen_bot.latency * 1000)}ms")
         logger.info("Bot is ready!")
         return

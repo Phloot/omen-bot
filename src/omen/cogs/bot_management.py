@@ -9,16 +9,17 @@ import datetime
 from datetime import datetime, timedelta
 from functions import convert_timedelta, return_config, attach_image
 from discord.ext import commands
+from discord import app_commands
 
-class BotManagement(commands.Cog):
+class BotManagement(commands.GroupCog, name="manage"):
     def __init__(self, omen_bot):
         self.omen_bot = omen_bot
         self.configs = return_config()
         self.logger = logging.getLogger("omen_bot_logger")
 
-    @commands.command()
-    @commands.is_owner()
-    async def reload(self, ctx, *, member: discord.Member = None):
+    @app_commands.checks.has_permissions(administrator=True)
+    @app_commands.command(name="reload", description="Reloads cogs to pull changes in")
+    async def reload(self, interaction: discord.Interaction):
         cog_counter = 0
         base_dir = os.path.abspath(sys.path[0])
         cog_path = os.path.join(base_dir, 'cogs')
@@ -27,12 +28,12 @@ class BotManagement(commands.Cog):
             if file.endswith('.py'):
                 await self.omen_bot.reload_extension(f"cogs.{file.replace('.py', '')}")
                 cog_counter+=1
+        await interaction.response.send_message(f"Reloaded {cog_counter} cog(s)")
 
-        await ctx.channel.send(f"Reloaded {cog_counter} cog(s)")
-
-    @commands.command()
-    async def info(self, ctx, *, member: discord.Member = None):
-        author_thumb = "bot_icon.png"
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    @app_commands.command(name="info", description="Provides general bot info")
+    async def info(self, interaction: discord.Interaction):
+        icon_image = "icon_author_co.jpg" 
 
         try:
             info={}
@@ -60,16 +61,16 @@ class BotManagement(commands.Cog):
                 info[k] = "Unknown"
 
         # Build and send embed
-        author_img = attach_image(author_thumb)
+        author_img_attached = attach_image("icon_author_co.jpg")
         embed=discord.Embed(title="Bot Info", color=0xf0f0f0)
-        embed.set_author(name=f"Omen Bot {info['version']}", url="https://github.com/Phloot/omen-bot", icon_url=f"attachment://{author_thumb}")
+        embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
         embed.add_field(name="Uptime", value=f"{info['uptime']}")
         embed.add_field(name="Ping", value=f"{info['ping']}")
         embed.add_field(name="Hostname", value=f"{info['hostname']}")
         embed.add_field(name="Platform", value=f"{info['platform']} {info['platform-release']}")
         embed.add_field(name="Architecture", value=f"{info['architecture']}")
         embed.add_field(name="Processor", value=f"{info['processor']}")
-        await ctx.channel.send(files=[author_img], embed=embed)
+        await interaction.response.send_message(files=[author_img_attached], embed=embed)
 
 async def setup(omen_bot):
     await omen_bot.add_cog(BotManagement(omen_bot))
