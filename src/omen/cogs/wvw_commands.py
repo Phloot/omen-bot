@@ -5,12 +5,14 @@ import discord
 import logging
 import json
 from discord.ext import commands
+from discord import app_commands
 from functions import to_lower, attach_image
 
 from api.gw2_api import GW2Wrapper
 
-class WVWCommands(commands.Cog):
+class WVWCommands(commands.GroupCog, name="wvw"):
     def __init__(self, omen_bot):
+        super().__init__()
         self.omen_bot = omen_bot
         self.logger = logging.getLogger("omen_bot_logger")
         self.gw2_api = GW2Wrapper()
@@ -175,8 +177,8 @@ class WVWCommands(commands.Cog):
             self.logger.error(f"Unable to retrieve data in get_current_world: {e}")
             return '1014'
 
-    @commands.command()
-    async def matchup(self, ctx, member: discord.Member = None):
+    @app_commands.command(name="matchup", description="Gets the matchup")
+    async def matchup(self, interaction: discord.Interaction):
         # General variables
         camp_emoji = "<:wvw_camp:1058165536334303272>"
         tower_emoji = "<:wvw_tower:1058167072762384414>"
@@ -226,13 +228,15 @@ class WVWCommands(commands.Cog):
                 embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['total_points']:=2} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
             embed.add_field(name="Current Skirmish", value=embed_skirmish_value_string, inline=False)
             embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
-            await ctx.channel.send(files=[author_img_attached, thumb_img_attached], embed=embed)
+            await interaction.response.send_message(files=[author_img_attached, thumb_img_attached], embed=embed)
         except Exception as e:
             print(e)
 
-    @commands.command()
-    async def worldpop(self, ctx, region: to_lower="na", member: discord.Member = None):
+    @app_commands.command(name="worldpop", description="Gets the world population")
+    async def worldpop(self, interaction: discord.Interaction, region: str):
         img_flag = f"flag_{region}.png"
+        icon_image = "icon_author_co.jpg" 
+        
         world_list_all = self.gw2_api.worlds()
 
         if region == "na":
@@ -243,20 +247,19 @@ class WVWCommands(commands.Cog):
             world_list_region = [world for world in world_list_all if world['id'] > 2000]
         
         # Attach images to display
-        author_img = attach_image(img_flag)
-        thumbnail_img = attach_image(self.img_world_population)
+        author_img_attached = attach_image("icon_author_co.jpg")
+        thumbnail_img_attached = attach_image(img_flag)
 
         # Initialize the embed
-        embed=discord.Embed(title=f"Worlds", color=bar_color)
-        embed.set_author(name=f"Current {region.upper()} World Populations", icon_url=f"attachment://{img_flag}")
-        embed.set_thumbnail(url=f"attachment://{self.img_world_population}")
+        embed=discord.Embed(title=f"Current {region.upper()} World Populations", color=bar_color)
+        embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
+        embed.set_thumbnail(url=f"attachment://{img_flag}")
         embed.add_field(name=":red_circle: Full", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Full"]))
         embed.add_field(name=":orange_circle: Very High", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "VeryHigh"]))
         embed.add_field(name=":yellow_circle: High", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "High"]))
         embed.add_field(name=":green_circle: Medium", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Medium"]))
         #embed.add_field(name=":green_circle: Low", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Low"]))
-
-        await ctx.channel.send(files=[author_img, thumbnail_img], embed=embed)
+        await interaction.response.send_message(files=[author_img_attached, thumbnail_img_attached], embed=embed)
 
 async def setup(omen_bot):
     await omen_bot.add_cog(WVWCommands(omen_bot))
