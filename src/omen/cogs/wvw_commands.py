@@ -233,19 +233,24 @@ class WVWCommands(commands.GroupCog, name="wvw"):
             print(e)
 
     @app_commands.command(name="worldpop", description="Gets the world population")
-    async def worldpop(self, interaction: discord.Interaction, region: str):
-        if region not in [ 'na', 'eu' ]:
-            raise commands.BadArgument(f"Invalid argument {region} provided!")
+    @app_commands.describe(option="Select a region to check populations for")
+    @app_commands.choices(option=[
+        app_commands.Choice(name="North America", value="na"),
+        app_commands.Choice(name="Europe", value="eu")
+    ])
+    async def worldpop(self, interaction: discord.Interaction, option: app_commands.Choice[str]):
+        if option not in [ 'na', 'eu' ]:
+            raise commands.BadArgument(f"Invalid argument {option} provided!")
 
-        img_flag = f"flag_{region}.png"
+        img_flag = f"flag_{option}.png"
         icon_image = "icon_author_co.jpg" 
         
         world_list_all = self.gw2_api.worlds()
 
-        if region == "na":
+        if option == "na":
             bar_color = 0x0c09ec
             world_list_region = [world for world in world_list_all if world['id'] < 2000]
-        elif region == "eu":
+        elif option == "eu":
             bar_color = 0xffd700
             world_list_region = [world for world in world_list_all if world['id'] > 2000]
         
@@ -254,7 +259,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         thumbnail_img_attached = attach_image(img_flag)
 
         # Initialize the embed
-        embed=discord.Embed(title=f"Current {region.upper()} World Populations", color=bar_color)
+        embed=discord.Embed(title=f"Current {option.upper()} World Populations", color=bar_color)
         embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
         embed.set_thumbnail(url=f"attachment://{img_flag}")
         embed.add_field(name=":red_circle: Full", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Full"]))
