@@ -239,18 +239,18 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         app_commands.Choice(name="Europe", value="eu")
     ])
     async def worldpop(self, interaction: discord.Interaction, option: app_commands.Choice[str]):
-        if option not in [ 'na', 'eu' ]:
-            raise commands.BadArgument(f"Invalid argument {option} provided!")
+        if option.value not in [ 'na', 'eu' ]:
+            raise commands.BadArgument(f"Invalid argument {option.value} provided!")
 
-        img_flag = f"flag_{option}.png"
+        img_flag = f"flag_{option.value}.png"
         icon_image = "icon_author_co.jpg" 
         
         world_list_all = self.gw2_api.worlds()
 
-        if option == "na":
+        if option.value == "na":
             bar_color = 0x0c09ec
             world_list_region = [world for world in world_list_all if world['id'] < 2000]
-        elif option == "eu":
+        elif option.value == "eu":
             bar_color = 0xffd700
             world_list_region = [world for world in world_list_all if world['id'] > 2000]
         
@@ -259,7 +259,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         thumbnail_img_attached = attach_image(img_flag)
 
         # Initialize the embed
-        embed=discord.Embed(title=f"Current {option.upper()} World Populations", color=bar_color)
+        embed=discord.Embed(title=f"Current {option.value.upper()} World Populations", color=bar_color)
         embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
         embed.set_thumbnail(url=f"attachment://{img_flag}")
         embed.add_field(name=":red_circle: Full", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Full"]))
