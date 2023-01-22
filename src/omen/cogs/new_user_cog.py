@@ -19,7 +19,7 @@ class NewUserCog(commands.Cog):
     async def on_member_join(self, member):
         channel = member.guild.system_channel
         author_img = attach_image("icon_author_co.jpg")
-        thumbnail_img = attach_image("thumbnail_co.gif")
+        thumbnail_img = attach_image("small_co_logo.png")
 
         # Send a welcome message to the system channel
         if channel is not None:
@@ -29,12 +29,12 @@ class NewUserCog(commands.Cog):
         # Send a direct message to the user
         embed=discord.Embed(title="Celestial Omen", description="A Crystal Desert community guild for pugs and pugmanders", color=0x2974ff)
         embed.set_author(name="Omen", icon_url="attachment://icon_author_co.jpg")
-        embed.set_thumbnail(url="attachment://thumbnail_co.gif")
+        embed.set_thumbnail(url="attachment://small_co_logo.png")
         embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on WvW raids"
         ", with a focus on fighting. We aim to bring together pugs and pugmanders from all sorts of timezones and guilds so as to build"
         "a formidable force within and outside of the standard NA timezone raids.", inline=False)
         embed.add_field(name="Join the Community", value=f"We're always open to welcome in new members, and with our minimal"
-        f"requirements, you may find that [CO] is the perfect complement to your primary guild if you already have one. Interested"
+        f"requirements, you may find that [CO] is the perfect WvW home for you, or a great complement to your primary guild if you already have one. Interested"
         f"in joining the squad? Check out {self.omen_bot.get_channel(self.configs['discord_channels']['join_channel']).mention} for details.", inline=False)
         embed.set_footer(text="Thanks, [CO] leadership team")
 
