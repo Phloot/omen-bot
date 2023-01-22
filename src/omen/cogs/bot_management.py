@@ -62,7 +62,7 @@ class BotManagement(commands.GroupCog, name="manage"):
 
         # Build and send embed
         author_img_attached = attach_image("icon_author_co.jpg")
-        embed=discord.Embed(title="Bot Info", color=0xf0f0f0)
+        embed=discord.Embed(title=f"Omen {info['version']}", color=0xf0f0f0)
         embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{icon_image}")
         embed.add_field(name="Uptime", value=f"{info['uptime']}")
         embed.add_field(name="Ping", value=f"{info['ping']}")

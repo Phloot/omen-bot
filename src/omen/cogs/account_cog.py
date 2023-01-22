@@ -2,6 +2,7 @@
 import discord
 import logging
 from discord.ext import commands
+from discord import app_commands
 from functions import return_config, attach_image
 
 from api.gw2_api import GW2Wrapper
@@ -10,7 +11,7 @@ from api.gw2_api import GW2Wrapper
 Cog: AccountCog
 Description: Used to handle requests against GW2 accounts, starting with my own.
 """
-class AccountCog(commands.Cog):
+class AccountCog(commands.GroupCog, name="account"):
     def __init__(self, omen_bot):
         self.omen_bot = omen_bot
         self.configs = return_config()
