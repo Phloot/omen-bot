@@ -52,10 +52,6 @@ if __name__ == "__main__":
     async def on_app_command_error(interaction: discord.Interaction, error: app_commands.AppCommandError) -> None:
         await interaction.response.send_message(f"{interaction.user.name} failed to execute {interaction.command.name}! Reason: {error}")
 
-    @omen_bot.tree.command(name="schedule", description="gets the schedule...")
-    async def schedule(interaction: discord.Interaction):
-        await interaction.response.send_message("soon™")
-
     @omen_bot.event
     async def on_ready():
         omen_bot.start_time = datetime.datetime.now()
