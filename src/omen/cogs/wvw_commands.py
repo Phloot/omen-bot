@@ -177,7 +177,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
             self.logger.error(f"Unable to retrieve data in get_current_world: {e}")
             return '1014'
 
-    @app_commands.command(name="matchup", description="Gets the matchup")
+    @app_commands.command(name="matchup", description="Display information about our current WvW matchup")
     async def matchup(self, interaction: discord.Interaction):
         # General variables
         camp_emoji = "<:wvw_camp:1058165536334303272>"
@@ -232,7 +232,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         except Exception as e:
             print(e)
 
-    @app_commands.command(name="worldpop", description="Gets the world population")
+    @app_commands.command(name="worldpop", description="Display current population tiers for a region")
     @app_commands.describe(option="Select a region to check populations for")
     @app_commands.choices(option=[
         app_commands.Choice(name="North America", value="na"),
