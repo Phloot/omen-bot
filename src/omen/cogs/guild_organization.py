@@ -51,7 +51,7 @@ class GuildOrganization(commands.GroupCog, name="guild"):
         next = await self._nearest_date(day_list, today) 
         return datetime.datetime.fromordinal(next.toordinal()).replace(hour=self.rall_schedule[next.weekday()]["hour"], minute=self.rall_schedule[next.weekday()]["minute"])
 
-    @app_commands.command(name="schedule", description="Diasplay the guilds WvW schedule")
+    @app_commands.command(name="schedule", description="Display the guilds WvW schedule")
     async def schedule(self, interaction: discord.Interaction):
         next_raid = await self._next_raid()
         hours, minutes, seconds = convert_timedelta(next_raid - datetime.datetime.now())
