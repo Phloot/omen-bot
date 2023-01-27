@@ -55,7 +55,6 @@ class GuildOrganization(commands.GroupCog, name="guild"):
     async def schedule(self, interaction: discord.Interaction):
         next_raid = await self._next_raid()
         hours, minutes, seconds = convert_timedelta(next_raid - datetime.datetime.now())
-        print(f"hours {hours} minutes {minutes} seconds {seconds}")
 
         if -2 <= hours <= 0:
             raid_status = "Raid is active!"
