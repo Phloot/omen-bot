@@ -65,6 +65,7 @@ class GuildOrganization(commands.GroupCog, name="guild"):
         embed.add_field(name="Next Raid", value=f"<t:{math.trunc(next_raid.timestamp())}:F>")
         embed.add_field(name="Time Until", value=f"{math.floor(hours/24)}d {hours - (math.floor(hours/24)*24)}h {minutes}m")
         embed.add_field(name="Future Raids", value=f"{await self._get_timestamps_list()}", inline=False)
+        embed.set_footer(text="Times are dynamic and are generated off of your personal timezone")
         await interaction.response.send_message(files=[author_img_attached, thumbnail_img_attached], embed=embed)
 
 async def setup(omen_bot):
