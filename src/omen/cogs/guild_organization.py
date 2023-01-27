@@ -31,7 +31,7 @@ class GuildOrganization(commands.GroupCog, name="guild"):
 
     async def _get_timestamps_list(self):
         epoch_list = []
-        upcoming_raid = await self._next_raid(await self._next_raid()+datetime.timedelta(days=1))
+        upcoming_raid = await self._next_raid(await self._next_raid() + datetime.timedelta(days=1))
 
         x = 0
         while x < 3:
@@ -55,6 +55,14 @@ class GuildOrganization(commands.GroupCog, name="guild"):
     async def schedule(self, interaction: discord.Interaction):
         next_raid = await self._next_raid()
         hours, minutes, seconds = convert_timedelta(next_raid - datetime.datetime.now())
+        print(f"hours {hours} minutes {minutes} seconds {seconds}")
+
+        if -2 <= hours <= 0:
+            raid_status = "Raid is active!"
+        elif -23 <= hours <= -3:
+            raid_status = "Raid completed"
+        else:
+            raid_status = f"{math.floor(hours/24)}d {hours - (math.floor(hours/24)*24)}h {minutes}m"
 
         author_img_attached = attach_image(self.icon_image)
         thumbnail_img_attached = attach_image("calendar.png")
@@ -63,7 +71,7 @@ class GuildOrganization(commands.GroupCog, name="guild"):
         embed.set_author(name="Omen", url="https://github.com/Phloot/omen-bot/", icon_url=f"attachment://{self.icon_image}")
         embed.set_thumbnail(url=f"attachment://calendar.png")
         embed.add_field(name="Next Raid", value=f"<t:{math.trunc(next_raid.timestamp())}:F>")
-        embed.add_field(name="Time Until", value=f"{math.floor(hours/24)}d {hours - (math.floor(hours/24)*24)}h {minutes}m")
+        embed.add_field(name="Time Until", value=f"{raid_status}")
         embed.add_field(name="Future Raids", value=f"{await self._get_timestamps_list()}", inline=False)
         embed.set_footer(text="Times are dynamic and are generated off of your personal timezone")
         await interaction.response.send_message(files=[author_img_attached, thumbnail_img_attached], embed=embed)
