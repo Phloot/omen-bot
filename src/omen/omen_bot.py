@@ -14,7 +14,7 @@ from functions import return_config
 if __name__ == "__main__":
     # Capture arguments
     parser = argparse.ArgumentParser(description='Capture script arguments.')
-    parser.add_argument('--discord_token', type=str, help='Discord bot token') # will be accesible under args.discord_token
+    parser.add_argument('--discord_token', type=str, nargs='?', const=None, default=None, help='Discord bot token') # will be accesible under args.discord_token
     args = parser.parse_args()
 
     # Define logger
@@ -68,4 +68,4 @@ if __name__ == "__main__":
         return
 
     # Run bot
-    omen_bot.run(token=args.discord_token)
+    omen_bot.run(token=os.environ['DISCORD_TOKEN'] if not None else args.discord_token)
