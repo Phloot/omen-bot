@@ -161,7 +161,6 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         for skirmish in match_data['skirmishes']:
             for s in self.server_colors:
                 self.match_data_dict[s]['skirmish']['skirmish_scores'][skirmish['id']] = skirmish['scores'][s]
-        return None
 
     # Generic function to get full WvW data for current match
     async def get_current_match_data(self):
