@@ -10,6 +10,7 @@ import os
 from discord.ext import commands
 from discord import app_commands
 from functions import return_config
+from src.omen.services.db_service import DbService
 
 if __name__ == "__main__":
     # Capture arguments
