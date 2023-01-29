@@ -7,6 +7,12 @@ import json
 from discord.ext import commands
 from discord import app_commands
 from functions import to_lower, attach_image
+import pandas
+from pandas import DataFrame
+from pandas import RangeIndex
+from skforecast.ForecasterAutoregMultiSeries import ForecasterAutoregMultiSeries
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import StandardScaler
 
 from api.gw2_api import GW2Wrapper
 
@@ -28,6 +34,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     'link': ''
                 },
                 'victory_points': 0,
+                'predicted_victory_points': 0,
                 'kd': {
                     'kills': 0,
                     'deaths': 0,
@@ -41,6 +48,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 },
                 "skirmish": {
                     'skirmish_scores': {},
+                    'cumulative_victory_points': {},
                     'ppt': 0
                 }
             },
@@ -50,6 +58,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     'link': ''
                 },
                 'victory_points': 0,
+                'predicted_victory_points': 0,
                 'kd': {
                     'kills': 0,
                     'deaths': 0,
@@ -63,6 +72,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 },
                 "skirmish": {
                     'skirmish_scores': {},
+                    'cumulative_victory_points': {},
                     'ppt': 0
                 }
             },
@@ -72,6 +82,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     'link': ''
                 },
                 'victory_points': 0,
+                'predicted_victory_points': 0,
                 'kd': {
                     'kills': 0,
                     'deaths': 0,
@@ -85,6 +96,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 },
                 "skirmish": {
                     'skirmish_scores': {},
+                    'cumulative_victory_points': {},
                     'ppt': 0
                 }
             }
@@ -162,6 +174,69 @@ class WVWCommands(commands.GroupCog, name="wvw"):
             for s in self.server_colors:
                 self.match_data_dict[s]['skirmish']['skirmish_scores'][skirmish['id']] = skirmish['scores'][s]
 
+    async def predict_future_skirmish_data(self):
+        data = {
+            'skirmish_id': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].keys())[:-1],
+            'green_score': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].values())[:-1],
+            'blue_score': list(self.match_data_dict['blue']['skirmish']['skirmish_scores'].values())[:-1],
+            'red_score': list(self.match_data_dict['red']['skirmish']['skirmish_scores'].values())[:-1]
+        }
+        past_skirmishes = DataFrame(data,
+            index=RangeIndex(start=data['skirmish_id'][0], stop=data['skirmish_id'][-1] + 1, name="skirmish"),
+            columns=['green_score', 'blue_score', 'red_score'])
+
+        if len(past_skirmishes.index) < 2:
+            self.logger.info("not enough finished skirmishes to forecast")
+            return
+
+        # forecast the future - can mess around with the regressor and lags if needed
+        self.logger.debug(f"forecasting with {min(len(past_skirmishes.index) - 1, 4)} lags")
+        forecaster = ForecasterAutoregMultiSeries(
+            regressor = Ridge(),
+            lags = min(len(past_skirmishes.index) - 1, 4),
+            transformer_series = StandardScaler()
+        )
+        forecaster.fit(past_skirmishes)
+        remaining_skirmishes = forecaster.predict(steps=(84 - data['skirmish_id'][-1]))
+
+        # create a complete match representation based on the forecast
+        match = pandas.concat([past_skirmishes, remaining_skirmishes])
+
+        # for debugging and understanding, log the match
+        pandas.set_option('display.max_rows', None)
+        self.logger.debug(f"forecast after {data['skirmish_id'][-1]} skirmishes:")
+        self.logger.debug(f"\n{match}")
+
+        # forecast a winner with victory points
+        # TODO This is horrible, but I wanted to get it working fast
+        for skirmish in match.index:
+            if match['green_score'][skirmish] > match['blue_score'][skirmish] and match['blue_score'][skirmish] > match['red_score'][skirmish]:
+                self.match_data_dict['green']['predicted_victory_points'] += 5
+                self.match_data_dict['blue']['predicted_victory_points'] += 4
+                self.match_data_dict['red']['predicted_victory_points'] += 3
+            elif (match['green_score'][skirmish] > match['red_score'][skirmish] and match['red_score'][skirmish] > match['blue_score'][skirmish]):
+                self.match_data_dict['green']['predicted_victory_points'] += 5
+                self.match_data_dict['red']['predicted_victory_points'] += 4
+                self.match_data_dict['blue']['predicted_victory_points'] += 3
+            elif (match['blue_score'][skirmish] > match['red_score'][skirmish] and match['red_score'][skirmish] > match['green_score'][skirmish]):
+                self.match_data_dict['blue']['predicted_victory_points'] += 5
+                self.match_data_dict['red']['predicted_victory_points'] += 4
+                self.match_data_dict['green']['predicted_victory_points'] += 3
+            elif (match['blue_score'][skirmish] > match['green_score'][skirmish] and match['green_score'][skirmish] > match['red_score'][skirmish]):
+                self.match_data_dict['blue']['predicted_victory_points'] += 5
+                self.match_data_dict['green']['predicted_victory_points'] += 4
+                self.match_data_dict['red']['predicted_victory_points'] += 3
+            elif (match['red_score'][skirmish] > match['blue_score'][skirmish] and match['blue_score'][skirmish] > match['green_score'][skirmish]):
+                self.match_data_dict['red']['predicted_victory_points'] += 5
+                self.match_data_dict['blue']['predicted_victory_points'] += 3
+                self.match_data_dict['green']['predicted_victory_points'] += 3
+            elif (match['red_score'][skirmish] > match['green_score'][skirmish] and match['green_score'][skirmish] > match['blue_score'][skirmish]):
+                self.match_data_dict['red']['predicted_victory_points'] += 5
+                self.match_data_dict['green']['predicted_victory_points'] += 4
+                self.match_data_dict['blue']['predicted_victory_points'] += 3
+            else:
+                self.logger.error(f"Unexpected skirmish outcome: green: {match['green_score'][skirmish]}, blue: {match['blue_score'][skirmish]}, red: {match['red_score'][skirmish]}")
+        
     # Generic function to get full WvW data for current match
     async def get_current_match_data(self):
         try:
@@ -189,6 +264,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         thumb_image = "wvw_thumbnail.png"
         embed_obj_value_string = ""
         embed_skirmish_value_string = ""
+        embed_predicted_victory_points_string = ""
         
         author_img_attached = attach_image("icon_author_co.jpg")
         thumb_img_attached = attach_image("wvw_thumbnail.png")
@@ -211,6 +287,9 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
             # Historical and current skirmish data
             await self.get_skirmish_data(match_data)
+
+            # Make predictions based on skirmish data
+            await self.predict_future_skirmish_data()
         else:
             self.logger.error(f"Match data currently unavailable. API may be down!")
         
@@ -227,8 +306,11 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 )
                 embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
                 embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['skirmish_scores'][list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]]} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
+                embed_predicted_victory_points_string += f":{server}_circle: Predicted Points: {self.match_data_dict[server]['predicted_victory_points']}\n"
             embed.add_field(name=f"Current Skirmish ({list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]} of 84)", value=embed_skirmish_value_string, inline=False)
             embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
+            embed.add_field(name="Match Prediction", value=embed_predicted_victory_points_string, inline=False)
+
             await interaction.response.send_message(files=[author_img_attached, thumb_img_attached], embed=embed)
         except Exception as e:
             print(e)
