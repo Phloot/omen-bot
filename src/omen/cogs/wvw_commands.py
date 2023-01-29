@@ -40,7 +40,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     'castle': 0
                 },
                 "skirmish": {
-                    'total_points': 0,
+                    'skirmish_scores': {},
                     'ppt': 0
                 }
             },
@@ -62,7 +62,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     'castle': 0
                 },
                 "skirmish": {
-                    'total_points': 0,
+                    'skirmish_scores': {},
                     'ppt': 0
                 }
             },
@@ -84,7 +84,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     'castle': 0
                 },
                 "skirmish": {
-                    'total_points': 0,
+                    'skirmish_scores': {},
                     'ppt': 0
                 }
             }
@@ -155,11 +155,12 @@ class WVWCommands(commands.GroupCog, name="wvw"):
     # Return tier for current matchup
     async def get_current_tier(self, match_data):
         self.match_data_dict['tier'] = match_data['id'].split('-')[1]
-
-    # Return current skirmish points
-    async def get_current_skirmish_points(self, match_data):
-        for s in self.server_colors:
-            self.match_data_dict[s]['skirmish']['total_points'] = match_data['skirmishes'][-1]['scores'][s]
+    
+    # Populate dictionary with skirmish data
+    async def get_skirmish_data(self, match_data):
+        for skirmish in match_data['skirmishes']:
+            for s in self.server_colors:
+                self.match_data_dict[s]['skirmish']['skirmish_scores'][skirmish['id']] = skirmish['scores'][s]
 
     # Generic function to get full WvW data for current match
     async def get_current_match_data(self):
@@ -185,7 +186,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         keep_emoji = "<:wvw_keep:1058165533532500108>"
         castle_emoji = "<:wvw_castle:1058165532366487572>"
         icon_image = "icon_author_co.jpg" 
-        thumb_image = "wvw_thumbnail.png" 
+        thumb_image = "wvw_thumbnail.png"
         embed_obj_value_string = ""
         embed_skirmish_value_string = ""
         
@@ -208,8 +209,8 @@ class WVWCommands(commands.GroupCog, name="wvw"):
             # Current objectives for each server
             await self.get_owned_objectives(match_data)
 
-            # Current skirmish points
-            await self.get_current_skirmish_points(match_data)
+            # Historical and current skirmish data
+            await self.get_skirmish_data(match_data)
         else:
             self.logger.error(f"Match data currently unavailable. API may be down!")
         
@@ -225,8 +226,8 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     inline=True
                 )
                 embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
-                embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['total_points']:=2} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
-            embed.add_field(name="Current Skirmish", value=embed_skirmish_value_string, inline=False)
+                embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['skirmish_scores'][list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]]} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
+            embed.add_field(name=f"Current Skirmish ({list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]} of 84)", value=embed_skirmish_value_string, inline=False)
             embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
             await interaction.response.send_message(files=[author_img_attached, thumb_img_attached], embed=embed)
         except Exception as e:
