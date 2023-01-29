@@ -30,13 +30,13 @@ class AccountCog(commands.GroupCog, name="account"):
         if token_info.get('text') == "Invalid access token":
             interaction.response.send_message("Invalid access token", ephemeral=True)
 
-        self.dbService.upsertUser(interaction.user.id, api_key)
+        self.dbService.insert_user(interaction.user.id, api_key)
         await interaction.response.send_message("API key registered", ephemeral=True)
 
 
     @app_commands.command(name="delete_api_key", description="Delete your currently registered GW2 API key")
     async def delete_token(self, interaction: discord.Interaction):
-        self.dbService.deleteUserApiKey(interaction.user.id)
+        self.dbService.delete_user_api_key(interaction.user.id)
         await interaction.response.send_message("API key deleted", ephemeral=True)
 
 async def setup(omen_bot):

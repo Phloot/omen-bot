@@ -23,7 +23,7 @@ class DbService:
         res = cur.execute("select * from coguild.users").fetchall()
         return res
 
-    def upsertUser(self, discord_id, api_key):
+    def insert_user(self, discord_id, api_key):
         cur = self.cursor()
         res = cur.execute("insert into coguild.users(discord_id, api_key) "
                           "VALUES (%s, %s)"
@@ -31,7 +31,7 @@ class DbService:
         self.connection.commit()
         return res
 
-    def deleteUserApiKey(self, discord_id):
+    def delete_user_api_key(self, discord_id):
         cur = self.cursor()
         res = cur.execute("delete from coguild.users where discord_id = %s", [str(discord_id)])
         self.connection.commit()
