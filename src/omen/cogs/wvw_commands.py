@@ -48,7 +48,6 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 },
                 "skirmish": {
                     'skirmish_scores': {},
-                    'cumulative_victory_points': {},
                     'ppt': 0
                 }
             },
@@ -72,7 +71,6 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 },
                 "skirmish": {
                     'skirmish_scores': {},
-                    'cumulative_victory_points': {},
                     'ppt': 0
                 }
             },
@@ -96,7 +94,6 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 },
                 "skirmish": {
                     'skirmish_scores': {},
-                    'cumulative_victory_points': {},
                     'ppt': 0
                 }
             }
