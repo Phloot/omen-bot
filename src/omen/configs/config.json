@@ -24,7 +24,8 @@
         "account": "account",
         "objectives": "wvw/objectives",
         "worlds": "worlds",
-        "wvw_matches": "wvw/matches"
+        "wvw_matches": "wvw/matches",
+        "tokeninfo": "tokeninfo"
     },
     "wvw_objectives": {
         "38-131": {
