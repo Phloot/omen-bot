@@ -23,6 +23,7 @@
     "gw2_endpoints": {
         "account": "account",
         "objectives": "wvw/objectives",
+        "tokeninfo": "tokeninfo",
         "worlds": "worlds",
         "wvw_matches": "wvw/matches"
     },
