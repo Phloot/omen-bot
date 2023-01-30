@@ -4,7 +4,7 @@ import logging
 from discord.ext import commands
 from discord import app_commands
 from functions import return_config
-from src.omen.services.db_service import DbService
+from services.db_service import DbService
 
 from api.gw2_api import GW2Wrapper
 

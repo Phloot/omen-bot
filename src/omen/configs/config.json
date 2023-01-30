@@ -23,9 +23,9 @@
     "gw2_endpoints": {
         "account": "account",
         "objectives": "wvw/objectives",
+        "tokeninfo": "tokeninfo",
         "worlds": "worlds",
-        "wvw_matches": "wvw/matches",
-        "tokeninfo": "tokeninfo"
+        "wvw_matches": "wvw/matches"
     },
     "wvw_objectives": {
         "38-131": {

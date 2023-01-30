@@ -3,7 +3,7 @@ import os
 import psycopg
 from psycopg.rows import class_row
 
-from src.omen.models.user import User
+from models.user import User
 
 
 class DbService:
@@ -11,7 +11,7 @@ class DbService:
     def __new__(cls):
         cls.connection = psycopg.connect(
             dbname="postgres",
-            host="localhost",
+            host="db",
             port=5432,
             user=os.environ['DB_USER'],
             password=os.environ['DB_PASSWORD'])
