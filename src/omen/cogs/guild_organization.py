@@ -56,7 +56,7 @@ class GuildOrganization(commands.GroupCog, name="guild"):
         next_raid = await self._next_raid()
         hours, minutes, seconds = convert_timedelta(next_raid - datetime.datetime.now())
 
-        if -2 <= hours <= 0:
+        if -2 <= hours < 0:
             raid_status = "Raid is active!"
         elif -23 <= hours <= -3:
             raid_status = "Raid completed"
