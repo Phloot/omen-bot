@@ -180,6 +180,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
     @app_commands.command(name="matchup", description="Display information about our current WvW matchup")
     async def matchup(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         # General variables
         camp_emoji = "<:wvw_camp:1058165536334303272>"
         tower_emoji = "<:wvw_tower:1058167072762384414>"
@@ -227,9 +228,9 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 )
                 embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
                 embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['skirmish_scores'][list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]]} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
-            embed.add_field(name=f"Current Skirmish ({list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]} of 84)", value=embed_skirmish_value_string, inline=False)
+            embed.add_field(name=f"Current Skirmish ({list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]} of 84)", value=embed_skirmish_value_string, inline=True)
             embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
-            await interaction.response.send_message(files=[author_img_attached, thumb_img_attached], embed=embed)
+            await interaction.followup.send(files=[author_img_attached, thumb_img_attached], embed=embed)
         except Exception as e:
             print(e)
 

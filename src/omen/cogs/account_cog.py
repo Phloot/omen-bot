@@ -18,7 +18,7 @@ class AccountCog(commands.GroupCog, name="account"):
         self.configs = return_config()
         self.logger = logging.getLogger("omen_bot_logger")
         self.gw2_api = GW2Wrapper()
-        self.dbService = DbService()
+        #self.dbService = DbService()
 
     @app_commands.command(name="register_api_key", description="Register your GW2 API key")
     async def register_token(self, interaction: discord.Interaction, api_key: str):
