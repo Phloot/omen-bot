@@ -11,22 +11,10 @@ import numpy as np
 import pandas
 from pandas import DataFrame
 from pandas import RangeIndex
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import MultiTaskLasso
-from sklearn.linear_model import ElasticNet
-from sklearn.linear_model import MultiTaskElasticNet
-from sklearn.linear_model import LassoLars
-from sklearn.linear_model import BayesianRidge
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import AdaBoostRegressor
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.svm import SVR
-import sklearn.neighbors
-import sklearn.ensemble
 from sklearn.preprocessing import StandardScaler
 from skforecast.ForecasterAutoregMultiSeries import ForecasterAutoregMultiSeries
 from skforecast.model_selection_multiseries import backtesting_forecaster_multiseries
