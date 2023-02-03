@@ -20,11 +20,12 @@ if __name__ == "__main__":
 
     # Define logger
     logger = logging.getLogger("omen_bot_logger")
+    logger.propagate=False
     handler = logging.StreamHandler()
     formatter = logging.Formatter('[%(asctime)-3s] %(levelname)-3s %(module)s %(message)s', "%Y-%m-%d %H:%M:%S")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     # Initialize bot and assign intents
     intents = discord.Intents.all()
