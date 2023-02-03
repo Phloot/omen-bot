@@ -257,6 +257,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
     @app_commands.command(name="matchup", description="Display information about our current WvW matchup")
     async def matchup(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         # General variables
         camp_emoji = "<:wvw_camp:1058165536334303272>"
         tower_emoji = "<:wvw_tower:1058167072762384414>"
