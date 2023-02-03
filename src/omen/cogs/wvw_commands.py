@@ -184,10 +184,10 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
         # gather the relevant data
         data = {
-            'skirmish_id': [1],
-            'green_score': [8925],
-            'blue_score': [5985],
-            'red_score': [7080]
+            'skirmish_id': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].keys())[:-1],
+            'green_score': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].values())[:-1],
+            'blue_score': list(self.match_data_dict['blue']['skirmish']['skirmish_scores'].values())[:-1],
+            'red_score': list(self.match_data_dict['red']['skirmish']['skirmish_scores'].values())[:-1]
         }
         completed_skirmishes = data['skirmish_id'][-1]
         total_skirmishes = 84
@@ -309,14 +309,14 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                 )
                 embed_obj_value_string += f":{server}_circle: {camp_emoji}x{self.match_data_dict[server]['objectives']['camp']:=2} {tower_emoji}x{self.match_data_dict[server]['objectives']['tower']:=2} {keep_emoji}x{self.match_data_dict[server]['objectives']['keep']:=2} {castle_emoji}x{self.match_data_dict[server]['objectives']['castle']:=2}\n"
                 embed_skirmish_value_string += f":{server}_circle: Points: {self.match_data_dict[server]['skirmish']['skirmish_scores'][list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]]} (+{self.match_data_dict[server]['skirmish']['ppt']:=2} per tick)\n"
-                embed_predicted_victory_points_string += f":{server}_circle: Predicted Points: {self.match_data_dict[server]['predicted_victory_points']}\n"
+                embed_predicted_victory_points_string += f":{server}_circle: Predicted Points: {int(self.match_data_dict[server]['predicted_victory_points'])}\n"
             #TODO Cleanly output when there's no prediction
-            embed_predicted_victory_points_string += f"Prediction Quality (lower is better): {self.match_data_dict['prediction_quality']}"
-            embed.add_field(name=f"Current Skirmish ({list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]} of 84)", value=embed_skirmish_value_string, inline=False)
+            #embed_predicted_victory_points_string += f"Prediction Quality (lower is better): {str(round(self.match_data_dict['prediction_quality'], 2))}"
+            embed.add_field(name=f"Current Skirmish ({list(self.match_data_dict[server]['skirmish']['skirmish_scores'])[-1]} of 84)", value=embed_skirmish_value_string, inline=True)
+            embed.add_field(name="Match Prediction", value=embed_predicted_victory_points_string, inline=True)
             embed.add_field(name="Objectives", value=embed_obj_value_string, inline=False)
-            embed.add_field(name="Match Prediction", value=embed_predicted_victory_points_string, inline=False)
 
-            await interaction.response.send_message(files=[author_img_attached, thumb_img_attached], embed=embed)
+            await interaction.followup.send(files=[author_img_attached, thumb_img_attached], embed=embed)
         except Exception as e:
             print(e)
 
