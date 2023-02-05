@@ -20,6 +20,7 @@ class BotManagement(commands.GroupCog, name="manage"):
     @app_commands.checks.has_permissions(administrator=True)
     @app_commands.command(name="reload", description="Reloads cogs to pull changes in")
     async def reload(self, interaction: discord.Interaction):
+        await interaction.response.defer()
         cog_counter = 0
         base_dir = os.path.abspath(sys.path[0])
         cog_path = os.path.join(base_dir, 'cogs')
@@ -28,7 +29,7 @@ class BotManagement(commands.GroupCog, name="manage"):
             if file.endswith('.py'):
                 await self.omen_bot.reload_extension(f"cogs.{file.replace('.py', '')}")
                 cog_counter+=1
-        await interaction.response.send_message(f"Reloaded {cog_counter} cog(s)")
+        await interaction.followup.send(f"Reloaded {cog_counter} cog(s)")
 
     @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
     @app_commands.command(name="info", description="Provides general bot info")
