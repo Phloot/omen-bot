@@ -45,3 +45,6 @@ def md5_check(file_content):
     md5_hash.update(file_content)
     digest = md5_hash.hexdigest()
     #TODO: Add in comp against known checksums
+
+def return_script_dir():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)))

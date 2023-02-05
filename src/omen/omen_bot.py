@@ -10,6 +10,7 @@ import os
 from discord.ext import commands
 from discord import app_commands
 from functions import return_config
+from services.db_service import DbService
 
 if __name__ == "__main__":
     # Capture arguments
@@ -19,6 +20,7 @@ if __name__ == "__main__":
 
     # Define logger
     logger = logging.getLogger("omen_bot_logger")
+    logger.propagate=False
     handler = logging.StreamHandler()
     formatter = logging.Formatter('[%(asctime)-3s] %(levelname)-3s %(module)s %(message)s', "%Y-%m-%d %H:%M:%S")
     handler.setFormatter(formatter)

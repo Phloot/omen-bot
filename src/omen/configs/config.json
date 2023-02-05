@@ -1,6 +1,6 @@
 {
     "internal": {
-        "version": "v1.2.0"
+        "version": "v1.3.0"
     },
     "authentication": {
         "gw2_token": "84CF4DFD-D23B-9D4D-A94D-918A33DD0F8FA692141E-717C-440B-94EA-485BE23F3D1D"
@@ -23,6 +23,7 @@
     "gw2_endpoints": {
         "account": "account",
         "objectives": "wvw/objectives",
+        "tokeninfo": "tokeninfo",
         "worlds": "worlds",
         "wvw_matches": "wvw/matches"
     },

@@ -4,7 +4,9 @@ WORKDIR /app/omen
 
 ADD . .
 
-RUN apk --no-cache add gcc musl-dev
+RUN apk --no-cache add gcc g++ musl-dev py3-scikit-learn
+
+ENV PYTHONPATH="$PYTHONPATH:/usr/lib/python3.10/site-packages"
 
 RUN pip install -r requirements.txt
 
