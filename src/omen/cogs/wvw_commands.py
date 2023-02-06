@@ -366,6 +366,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         app_commands.Choice(name="Europe", value="eu")
     ])
     async def worldpop(self, interaction: discord.Interaction, option: app_commands.Choice[str]):
+        await interaction.response.defer()
         if option.value not in [ 'na', 'eu' ]:
             raise commands.BadArgument(f"Invalid argument {option.value} provided!")
 
@@ -394,7 +395,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         embed.add_field(name=":yellow_circle: High", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "High"]))
         embed.add_field(name=":green_circle: Medium", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Medium"]))
         #embed.add_field(name=":green_circle: Low", value='\n'.join([world['name'] for world in world_list_region if world['population'] == "Low"]))
-        await interaction.response.send_message(files=[author_img_attached, thumbnail_img_attached], embed=embed)
+        await interaction.followup.send(files=[author_img_attached, thumbnail_img_attached], embed=embed)
 
 async def setup(omen_bot):
     await omen_bot.add_cog(WVWCommands(omen_bot))
