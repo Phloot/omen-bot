@@ -4,7 +4,7 @@ WORKDIR /app/omen
 
 ADD . .
 
-RUN apk --no-cache add gcc g++ musl-dev py3-scikit-learn
+RUN apk --no-cache add postgresql-dev gcc g++ musl-dev py3-scikit-learn
 
 ENV PYTHONPATH="$PYTHONPATH:/usr/lib/python3.10/site-packages"
 
