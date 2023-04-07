@@ -27,7 +27,7 @@ class NewUserCog(commands.Cog):
             f" to choose roles and {self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']).mention} if you're looking for squad builds.")
         
         # Send a direct message to the user
-        embed=discord.Embed(title="Celestial Omen", description="A Crystal Desert community guild for pugs and pugmanders", color=0x2974ff)
+        embed=discord.Embed(title="Celestial Omen", description="A Sea of Sorrows community guild for pugs and pugmanders", color=0x2974ff)
         embed.set_author(name="Omen", icon_url="attachment://icon_author_co.jpg")
         embed.set_thumbnail(url="attachment://small_co_logo.png")
         embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on WvW raids"
