@@ -1,3 +1,4 @@
+"""
 import os
 
 import psycopg
@@ -36,3 +37,4 @@ class DbService:
         res = cur.execute("delete from coguild.users where discord_id = %s", [str(discord_id)])
         self.connection.commit()
         return res
+"""
