@@ -107,18 +107,21 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         }
 
     # Populate class dictionary with VP data
-    async def get_current_victory_points(self, match_data):
-        for server, points in match_data['victory_points'].items():
-            try:
+    async def get_current_victory_points(self, match_data):     
+        try:
+            for server, points in match_data['victory_points'].items():
                 self.match_data_dict[server]['victory_points'] = points
-            except Exception as e:
+        except Exception as e:
                 self.match_data_dict[server]['victory_points'] = self.match_data_dict[server]['victory_points']
 
     # Populate class dictionary with K/D data
     async def get_current_kdr(self, match_data):
         # Collect kills
-        for server, k_or_d in match_data['kills'].items():
-            self.match_data_dict[server]['kd']['kills'] = k_or_d
+        try:
+            for server, k_or_d in match_data['kills'].items():
+                self.match_data_dict[server]['kd']['kills'] = k_or_d
+        except Exception as e:
+            self.logger.error(f"Error in get_current_kdr: {e}")
 
         # Collect deaths
         for server, k_or_d in match_data['deaths'].items():
@@ -135,19 +138,22 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
     # Populate class dictionary with server data
     async def get_current_match_servers(self, match_data):
-        for server, ids in match_data['all_worlds'].items():
-            try:
+        try:
+            for server, ids in match_data['all_worlds'].items():
                 self.match_data_dict[server]['worlds']['host'] = self.gw2_api.worlds([ids[1]])[0]['name']
                 self.match_data_dict[server]['worlds']['link'] = self.gw2_api.worlds([ids[0]])[0]['name']
-            except Exception as e:
-                self.logger.error(f"Problem in get_current_match_servers: {e}")
+        except Exception as e:
+            self.logger.error(f"Problem in get_current_match_servers: {e}")
 
     # Populate class dictionary with owned objectives data
     async def get_owned_objectives(self, match_data):
-        # We need to reset values in the self dict before proceeding since we are counting
-        for s in self.server_colors:
-            self.match_data_dict[s]['objectives'] = self.match_data_dict[s]['objectives'].fromkeys(self.match_data_dict[s]['objectives'], 0)
-            self.match_data_dict[s]['skirmish']['ppt'] = 0
+        try:
+            # We need to reset values in the self dict before proceeding since we are counting
+            for s in self.server_colors:
+                self.match_data_dict[s]['objectives'] = self.match_data_dict[s]['objectives'].fromkeys(self.match_data_dict[s]['objectives'], 0)
+                self.match_data_dict[s]['skirmish']['ppt'] = 0
+        except Exception as e:
+            self.logger.error(f"Error in get_owned_objectives: {e}")
 
         objectives_to_count = [ 'camp', 'tower', 'keep', 'castle' ]
         map_count = len(match_data['maps'])
@@ -170,75 +176,84 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
     # Return tier for current matchup
     async def get_current_tier(self, match_data):
-        self.match_data_dict['tier'] = match_data['id'].split('-')[1]
+        try:
+            self.match_data_dict['tier'] = match_data['id'].split('-')[1]
+        except Exception as e:
+            self.logger.error(f"Error in get_current_tier: {e}")
     
     # Populate dictionary with skirmish data
     async def get_skirmish_data(self, match_data):
-        for skirmish in match_data['skirmishes']:
-            for s in self.server_colors:
-                self.match_data_dict[s]['skirmish']['skirmish_scores'][skirmish['id']] = skirmish['scores'][s]
+        try:
+            for skirmish in match_data['skirmishes']:
+                for s in self.server_colors:
+                    self.match_data_dict[s]['skirmish']['skirmish_scores'][skirmish['id']] = skirmish['scores'][s]
+        except Exception as e:
+            self.logger.error(f"Error in get_skirmish_data: {e}")
 
     async def predict_future_skirmish_data(self):
-        # reset values in the self dict
-        for s in self.server_colors:
-            self.match_data_dict[s]['predicted_victory_points'] = 0
+        try:
+            # reset values in the self dict
+            for s in self.server_colors:
+                self.match_data_dict[s]['predicted_victory_points'] = 0
 
-        # gather the relevant data
-        data = {
-            'skirmish_id': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].keys())[:-1],
-            'green_score': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].values())[:-1],
-            'blue_score': list(self.match_data_dict['blue']['skirmish']['skirmish_scores'].values())[:-1],
-            'red_score': list(self.match_data_dict['red']['skirmish']['skirmish_scores'].values())[:-1]
-        }
-        completed_skirmishes = data['skirmish_id'][-1]
-        total_skirmishes = 84
+            # gather the relevant data
+            data = {
+                'skirmish_id': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].keys())[:-1],
+                'green_score': list(self.match_data_dict['green']['skirmish']['skirmish_scores'].values())[:-1],
+                'blue_score': list(self.match_data_dict['blue']['skirmish']['skirmish_scores'].values())[:-1],
+                'red_score': list(self.match_data_dict['red']['skirmish']['skirmish_scores'].values())[:-1]
+            }
+            completed_skirmishes = data['skirmish_id'][-1]
+            total_skirmishes = 84
 
-        if completed_skirmishes < 2:
-            self.logger.info("Insufficient data to predict future skirmish data")
-            return
+            if completed_skirmishes < 2:
+                self.logger.info("Insufficient data to predict future skirmish data")
+                return
 
-        # format into dataframe
-        past_skirmishes = DataFrame(data,
-            index=RangeIndex(start=data['skirmish_id'][0], stop=completed_skirmishes + 1, name="skirmish"),
-            columns=['green_score', 'blue_score', 'red_score'])
+            # format into dataframe
+            past_skirmishes = DataFrame(data,
+                index=RangeIndex(start=data['skirmish_id'][0], stop=completed_skirmishes + 1, name="skirmish"),
+                columns=['green_score', 'blue_score', 'red_score'])
 
-        # predict all the remaining skirmishes
-        # TODO Additional testing and tuning on these four regressors.
-        segments = min(len(past_skirmishes.index) - 1, 4)
-        forecaster = ForecasterAutoregMultiSeries (
-            #regressor = DecisionTreeRegressor(),
-            regressor = KNeighborsRegressor(n_neighbors=min(completed_skirmishes, 5)),
-            #regressor = RandomForestRegressor(),
-            #regressor = GradientBoostingRegressor(),
-            transformer_series = StandardScaler(),
-            lags = segments
-        )
-        forecaster.fit(past_skirmishes)
-        future_skirmishes = DataFrame(0,
-            index=RangeIndex(start=completed_skirmishes+1, stop=total_skirmishes+1, name="skirmish"),
-            columns=['green_score', 'blue_score', 'red_score'],
+            # predict all the remaining skirmishes
+            # TODO Additional testing and tuning on these four regressors.
+            segments = min(len(past_skirmishes.index) - 1, 4)
+            forecaster = ForecasterAutoregMultiSeries (
+                #regressor = DecisionTreeRegressor(),
+                regressor = KNeighborsRegressor(n_neighbors=min(completed_skirmishes, 5)),
+                #regressor = RandomForestRegressor(),
+                #regressor = GradientBoostingRegressor(),
+                transformer_series = StandardScaler(),
+                lags = segments
             )
-        metric, predictions = backtesting_forecaster_multiseries(
-            forecaster = forecaster,
-            series = pandas.concat([past_skirmishes, future_skirmishes]),
-            steps = total_skirmishes - segments,
-            metric = 'mean_absolute_error',
-            initial_train_size = None
-        )
+            forecaster.fit(past_skirmishes)
+            future_skirmishes = DataFrame(0,
+                index=RangeIndex(start=completed_skirmishes+1, stop=total_skirmishes+1, name="skirmish"),
+                columns=['green_score', 'blue_score', 'red_score'],
+                )
+            metric, predictions = backtesting_forecaster_multiseries(
+                forecaster = forecaster,
+                series = pandas.concat([past_skirmishes, future_skirmishes]),
+                steps = total_skirmishes - segments,
+                metric = 'mean_absolute_error',
+                initial_train_size = None
+            )
 
-        # combine the predictions with the historical data to get a complete match
-        match = pandas.concat([past_skirmishes, predictions.loc[completed_skirmishes+1:]])
+            # combine the predictions with the historical data to get a complete match
+            match = pandas.concat([past_skirmishes, predictions.loc[completed_skirmishes+1:]])
 
-        # crack open the metric value and compute the overall metrics.
-        #self.logger.debug(f"\n{match.to_string()}\n{metric.to_string()}")
+            # crack open the metric value and compute the overall metrics.
+            #self.logger.debug(f"\n{match.to_string()}\n{metric.to_string()}")
 
-        # forecast end match victory points
-        for skirmish in match.index:
-            scores = match.loc[skirmish, ['green_score', 'blue_score', 'red_score']]
-            ranks = scores.rank(ascending=False, method='min')
-            for rank, team in zip(ranks, self.server_colors):
-                self.match_data_dict[team]['predicted_victory_points'] += (5 - (rank - 1))
-        self.match_data_dict['prediction_quality'] = metric['mean_absolute_error'].mean()
+            # forecast end match victory points
+            for skirmish in match.index:
+                scores = match.loc[skirmish, ['green_score', 'blue_score', 'red_score']]
+                ranks = scores.rank(ascending=False, method='min')
+                for rank, team in zip(ranks, self.server_colors):
+                    self.match_data_dict[team]['predicted_victory_points'] += (5 - (rank - 1))
+            self.match_data_dict['prediction_quality'] = metric['mean_absolute_error'].mean()
+        except Exception as e:
+            self.logger.error(f"Error in predict_future_skirmish_data: {e}")
         
     # Generic function to get full WvW data for current match
     async def get_current_match_data(self):
@@ -262,57 +277,66 @@ class WVWCommands(commands.GroupCog, name="wvw"):
 
     # Generate pie chart
     async def generate_score_piechart(self):
-        file_path = os.path.join(await self.get_assets_dir(), "current_score.png")
+        try:
+            file_path = os.path.join(await self.get_assets_dir(), "current_score.png")
 
-        server_scores = [int(self.match_data_dict['green']['skirmish']['ppt']), int(self.match_data_dict['blue']['skirmish']['ppt']), int(self.match_data_dict['red']['skirmish']['ppt'])]
-        plt.figure(figsize=(12, 12))
+            # Clear the figure to free up resources
+            plt.clf()
 
-        patches, server_labels = plt.pie(
-            server_scores,  
-            rotatelabels=False, 
-            labeldistance=0.70, 
-            colors=['green', 'blue', 'red'],
-            wedgeprops={'linewidth': 15.0, 'edgecolor': 'white'},
-            )
+            server_scores = [int(self.match_data_dict['green']['skirmish']['ppt']), int(self.match_data_dict['blue']['skirmish']['ppt']), int(self.match_data_dict['red']['skirmish']['ppt'])]
+            plt.figure(figsize=(12, 12))
 
-        plt.savefig(file_path, transparent=True)
-        plt.close()
+            patches, server_labels = plt.pie(
+                server_scores,  
+                rotatelabels=False, 
+                labeldistance=0.70, 
+                colors=['green', 'blue', 'red'],
+                wedgeprops={'linewidth': 15.0, 'edgecolor': 'white'},
+                )
+
+            plt.savefig(file_path, transparent=True)
+            plt.close()
+        except Exception as e:
+            self.logger.error(f"Error in generate_score_piechart: {e}")
 
     # Collect data on a schedule to lighten load 
     @tasks.loop(minutes=5.0)
     async def wvw_batch_update(self):
         match_data = await self.get_current_match_data()
 
-        if match_data:
-            await self.get_current_match_servers(match_data)
-            await self.get_current_tier(match_data)
-                    
-            # Current victory points for each server
-            await self.get_current_victory_points(match_data)
+        await self.get_current_match_servers(match_data)
+        await self.get_current_tier(match_data)
+                
+        # Current victory points for each server
+        await self.get_current_victory_points(match_data)
 
-            # Current k/d for each server
-            await self.get_current_kdr(match_data)
+        # Current k/d for each server
+        await self.get_current_kdr(match_data)
 
-            # Current objectives for each server
-            await self.get_owned_objectives(match_data)
+        # Current objectives for each server
+        await self.get_owned_objectives(match_data)
 
-            # Historical and current skirmish data
-            await self.get_skirmish_data(match_data)
+        # Historical and current skirmish data
+        await self.get_skirmish_data(match_data)
 
-            # Make predictions based on skirmish data
-            await self.predict_future_skirmish_data()
+        # Make predictions based on skirmish data
+        await self.predict_future_skirmish_data()
 
-            # Update timestamp for last update
-            new_york_timezone = pytz.timezone("America/New_York")
-            now = datetime.now(new_york_timezone)
-            self.match_data_dict['last_update'] = now.strftime("%d/%m/%Y %H:%M:%S")
-        else:
-            self.logger.error(f"Match data currently unavailable. API may be down!")
+        # Update timestamp for last update
+        new_york_timezone = pytz.timezone("America/New_York")
+        now = datetime.now(new_york_timezone)
+        self.match_data_dict['last_update'] = now.strftime("%d/%m/%Y %H:%M:%S")
+
         await self.generate_score_piechart()
 
     @wvw_batch_update.before_loop
     async def before_wvw_batch_update(self):
         await self.omen_bot.wait_until_ready()
+    
+    @wvw_batch_update.on_error()
+    async def on_loop_error(self, error):
+        self.logger.error(f"wvw_batch_update loop encountered an error: {error}")
+        self.wvw_batch_update.restart()
 
     async def cog_unload(self):
         self.wvw_batch_update.cancel()
