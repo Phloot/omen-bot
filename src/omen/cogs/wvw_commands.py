@@ -300,43 +300,43 @@ class WVWCommands(commands.GroupCog, name="wvw"):
             self.logger.error(f"Error in generate_score_piechart: {e}")
 
     # Collect data on a schedule to lighten load 
-    @tasks.loop(minutes=5.0)
+    @tasks.loop(minutes=5.0, reconnect = True)
     async def wvw_batch_update(self):
-        match_data = await self.get_current_match_data()
+        try:
+            match_data = await self.get_current_match_data()
 
-        await self.get_current_match_servers(match_data)
-        await self.get_current_tier(match_data)
-                
-        # Current victory points for each server
-        await self.get_current_victory_points(match_data)
+            await self.get_current_match_servers(match_data)
+            await self.get_current_tier(match_data)
+                    
+            # Current victory points for each server
+            await self.get_current_victory_points(match_data)
 
-        # Current k/d for each server
-        await self.get_current_kdr(match_data)
+            # Current k/d for each server
+            await self.get_current_kdr(match_data)
 
-        # Current objectives for each server
-        await self.get_owned_objectives(match_data)
+            # Current objectives for each server
+            await self.get_owned_objectives(match_data)
 
-        # Historical and current skirmish data
-        await self.get_skirmish_data(match_data)
+            # Historical and current skirmish data
+            await self.get_skirmish_data(match_data)
 
-        # Make predictions based on skirmish data
-        await self.predict_future_skirmish_data()
+            # Make predictions based on skirmish data
+            await self.predict_future_skirmish_data()
 
-        # Update timestamp for last update
-        new_york_timezone = pytz.timezone("America/New_York")
-        now = datetime.now(new_york_timezone)
-        self.match_data_dict['last_update'] = now.strftime("%d/%m/%Y %H:%M:%S")
+            # Update timestamp for last update
+            new_york_timezone = pytz.timezone("America/New_York")
+            now = datetime.now(new_york_timezone)
+            self.match_data_dict['last_update'] = now.strftime("%d/%m/%Y %H:%M:%S")
 
-        await self.generate_score_piechart()
+            await self.generate_score_piechart()
+        except Exception as e:
+            self.logger.error(f"wvw_batch_update loop encountered an error: {e}")
+            self.wvw_batch_update.restart()
+
 
     @wvw_batch_update.before_loop
     async def before_wvw_batch_update(self):
         await self.omen_bot.wait_until_ready()
-    
-    @wvw_batch_update.on_error()
-    async def on_loop_error(self, error):
-        self.logger.error(f"wvw_batch_update loop encountered an error: {error}")
-        self.wvw_batch_update.restart()
 
     async def cog_unload(self):
         self.wvw_batch_update.cancel()
