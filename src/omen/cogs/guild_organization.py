@@ -21,10 +21,10 @@ class GuildOrganization(commands.GroupCog, name="guild"):
         self.icon_image = "icon_author_co.jpg" 
         self.rall_schedule = {
             0: { "hour": 18, "minute": 30 }, # Monday
+            1: { "hour": 18, "minute": 30 }, # Tuesday
             2: { "hour": 18, "minute": 30 }, # Wednesday
-            3: { "hour": 18, "minute": 30 }, # Thursday
-            5: { "hour": 12, "minute": 0 },  # Saturday
-            6: { "hour": 12, "minute": 0 }   # Sunday
+            4: { "hour": 20, "minute": 00 }, # Friday
+            5: { "hour": 12, "minute": 0 }   # Saturday
         }
 
     async def _nearest_date(self, items, pivot):
