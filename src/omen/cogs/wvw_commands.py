@@ -189,6 +189,7 @@ class WVWCommands(commands.GroupCog, name="wvw"):
                     self.match_data_dict[s]['skirmish']['skirmish_scores'][skirmish['id']] = skirmish['scores'][s]
         except Exception as e:
             self.logger.error(f"Error in get_skirmish_data: {e}")
+            return None
 
     async def predict_future_skirmish_data(self):
         try:
