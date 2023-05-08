@@ -22,7 +22,7 @@ services:
     ports: 
       - '8000:8000'
     environment:
-      DISCORD_TOKEN: "ODU0MDkyNzQ4MjY4NzY1MjA0.GeQQem.MO0uWnry7eYWdR15QmmWDR_HP_y4KTAYikvgDs"
+      DISCORD_TOKEN: ""
       TZ: "America/Denver"
       DB_HOST: db
       DB_PORT: 5432
