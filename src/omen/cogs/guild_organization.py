@@ -20,12 +20,18 @@ class GuildOrganization(commands.GroupCog, name="guild"):
         self.logger = logging.getLogger("omen_bot_logger")
         self.icon_image = "icon_author_co.jpg" 
         self.rall_schedule = {
-            0: { "hour": 18, "minute": 30 }, # Monday
-            1: { "hour": 18, "minute": 30 }, # Tuesday
             2: { "hour": 18, "minute": 30 }, # Wednesday
             4: { "hour": 20, "minute": 00 }, # Friday
-            5: { "hour": 12, "minute": 0 }   # Saturday
+            5: { "hour": 12, "minute": 0  }, # Saturday
+            6: { "hour": 18, "minute": 30 }  # Sunday 
         }
+        self.thorton_schedule = {
+            0: { "hour": 18, "minute": 30 }  # Monday
+        }
+        self.hells_schedule = {
+            1: { "hour": 18, "minute": 30 }  # Tuesday
+        }
+        self.combined_schedules = {}
 
     async def _nearest_date(self, items, pivot):
         return min(items, key=lambda x: abs(x - pivot))

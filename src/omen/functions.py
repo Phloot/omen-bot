@@ -48,3 +48,10 @@ def md5_check(file_content):
 
 def return_script_dir():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)))
+
+# Merge any given number of dictionaries
+def merge_dicts(*args):
+    merged = {}
+    for arg in args:
+        merged.update(arg)
+    return merged
