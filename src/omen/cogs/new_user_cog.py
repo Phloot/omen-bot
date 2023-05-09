@@ -27,11 +27,11 @@ class NewUserCog(commands.Cog):
             f" to choose roles and {self.omen_bot.get_channel(self.configs['discord_channels']['meta_builds']).mention} if you're looking for squad builds.")
         
         # Send a direct message to the user
-        embed=discord.Embed(title="Celestial Omen", description="A Sea of Sorrows community guild for pugs and pugmanders", color=0x2974ff)
+        embed=discord.Embed(title="Celestial Omen", description="A Sea of Sorrows fight focused WvW guild", color=0x2974ff)
         embed.set_author(name="Omen", icon_url="attachment://icon_author_co.jpg")
         embed.set_thumbnail(url="attachment://small_co_logo.png")
         embed.add_field(name="Overview", value="Welcome to the Celestial Omen Discord! We're a guild focused on WvW raids"
-        ", with a focus on fighting. We aim to bring together pugs and pugmanders from all sorts of timezones and guilds so as to build"
+        ", with a focus on fighting. We aim to bring together WvW'ers from all sorts of timezones and guilds so as to build"
         " a formidable force within and outside of the standard NA timezone raids.", inline=False)
         embed.add_field(name="Join the Community", value=f"We're always open to welcome in new members, and with our minimal"
         f" requirements, you may find that [CO] is the perfect WvW home for you, or a great complement to your primary guild if you already have one. Interested"
