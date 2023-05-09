@@ -120,12 +120,12 @@ class WVWCommands(commands.GroupCog, name="wvw"):
         try:
             for server, k_or_d in match_data['kills'].items():
                 self.match_data_dict[server]['kd']['kills'] = k_or_d
+
+            # Collect deaths
+            for server, k_or_d in match_data['deaths'].items():
+                self.match_data_dict[server]['kd']['deaths'] = k_or_d
         except Exception as e:
             self.logger.error(f"Error in get_current_kdr: {e}")
-
-        # Collect deaths
-        for server, k_or_d in match_data['deaths'].items():
-            self.match_data_dict[server]['kd']['deaths'] = k_or_d
 
         # Calc and store KDR
         for server, data in self.match_data_dict.items():
@@ -152,27 +152,24 @@ class WVWCommands(commands.GroupCog, name="wvw"):
             for s in self.server_colors:
                 self.match_data_dict[s]['objectives'] = self.match_data_dict[s]['objectives'].fromkeys(self.match_data_dict[s]['objectives'], 0)
                 self.match_data_dict[s]['skirmish']['ppt'] = 0
+
+            objectives_to_count = [ 'camp', 'tower', 'keep', 'castle' ]
+            map_count = len(match_data['maps'])
+            map_iter = 0
+
+            while map_iter < map_count:
+                obj_count = len(match_data['maps'][map_iter]['objectives'])
+                obj_iter = 0
+
+                while obj_iter < obj_count:
+                    obj_owner = match_data['maps'][map_iter]['objectives'][obj_iter]['owner'].lower()
+                    obj_type = match_data['maps'][map_iter]['objectives'][obj_iter]['type'].lower()
+                    self.match_data_dict[obj_owner]['skirmish']['ppt'] += match_data['maps'][map_iter]['objectives'][obj_iter]['points_tick']
+                    if obj_type in objectives_to_count: self.match_data_dict[obj_owner]['objectives'][obj_type] += 1
+                    obj_iter += 1
+                map_iter += 1
         except Exception as e:
             self.logger.error(f"Error in get_owned_objectives: {e}")
-
-        objectives_to_count = [ 'camp', 'tower', 'keep', 'castle' ]
-        map_count = len(match_data['maps'])
-        map_iter = 0
-
-        while map_iter < map_count:
-            obj_count = len(match_data['maps'][map_iter]['objectives'])
-            obj_iter = 0
-
-            while obj_iter < obj_count:
-                obj_owner = match_data['maps'][map_iter]['objectives'][obj_iter]['owner'].lower()
-                obj_type = match_data['maps'][map_iter]['objectives'][obj_iter]['type'].lower()
-                self.match_data_dict[obj_owner]['skirmish']['ppt'] += match_data['maps'][map_iter]['objectives'][obj_iter]['points_tick']
-                try:
-                    if obj_type in objectives_to_count: self.match_data_dict[obj_owner]['objectives'][obj_type] += 1
-                except Exception as e:
-                    print(e)
-                obj_iter += 1
-            map_iter += 1
 
     # Return tier for current matchup
     async def get_current_tier(self, match_data):
