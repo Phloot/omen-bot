@@ -1,8 +1,14 @@
+CREATE DATABASE co_db;
+
+\c co_db
+
 CREATE SCHEMA coguild;
 
 CREATE TABLE coguild.users (
     discord_id VARCHAR(255) NOT NULL PRIMARY KEY,
     api_key VARCHAR(255) NOT NULL,
+    gw2_account_id VARCHAR(255), 
+    gw2_account_name VARCHAR(255),
     created_date timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 

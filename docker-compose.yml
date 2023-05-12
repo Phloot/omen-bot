@@ -15,7 +15,6 @@ services:
     container_name: omen
     build:
       context: ./
-    #image: phlootdocker/omen:v1.2.2
     image: omen
     depends_on:
       - db
@@ -28,7 +27,7 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: tempplaceholder
-      DB_NAME: postgres
+      DB_NAME: co_db
     links:
       - db
 volumes:
