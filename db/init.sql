@@ -9,7 +9,7 @@ CREATE TABLE coguild.users (
     api_key VARCHAR(255) NOT NULL,
     gw2_account_id VARCHAR(255), 
     gw2_account_name VARCHAR(255),
-    created_date timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+    last_updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE coguild.kills (

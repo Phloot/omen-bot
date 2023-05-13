@@ -11,6 +11,9 @@
         "join_channel": 846623180268634142,
         "meta_builds": 843866852237377619
     },
+    "discord_guild": {
+        "guild_id": 840265739884560384
+    },
     "arcdps": {
         "evtc_path": ""
     },

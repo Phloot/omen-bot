@@ -26,7 +26,7 @@ class DbService:
         res = cur.execute("SELECT * FROM coguild.users").fetchall()
         return res
 
-    def insert_user(self, discord_id, api_key: None, gw2_account_id: None, gw2_account_name):
+    def insert_user(self, discord_id, api_key: None, gw2_account_id: None, gw2_account_name: None):
         cur = self.cursor()
         res = cur.execute("INSERT INTO coguild.users (discord_id, api_key, gw2_account_id, gw2_account_name) "
                           "VALUES (%s, %s, %s, %s) "

@@ -19,6 +19,10 @@ class RaidCog(commands.GroupCog, name="raid"):
         self.configs = return_config()
         self.logger = logging.getLogger("omen_bot_logger")
 
+    @app_commands.command(name="nothing", description="Does nothing")
+    async def nothing(self, interaction: discord.Interaction):
+        print("doing nothing")
+
     # Monitor #wvw-logs channel
     ## Parse stats
     ## Register them into a table - created based on raid UID 
@@ -30,3 +34,5 @@ class RaidCog(commands.GroupCog, name="raid"):
     ## Biggest Planker, Deadliest, Biggest Spikes, Cleanliest, Medic, Dodger, Magnet
     ## Give role to member for + awards
     
+async def setup(omen_bot):
+    await omen_bot.add_cog(RaidCog(omen_bot))
