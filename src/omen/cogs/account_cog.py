@@ -1,6 +1,7 @@
 # src/cogs/account_cog.py
 import discord
 import logging
+from discord.utils import get
 from discord.ext import commands, tasks
 from discord import app_commands
 from functions import return_config
@@ -40,8 +41,8 @@ class AccountCog(commands.GroupCog, name="account"):
         await interaction.followup.send("API key registered", ephemeral=True)
 
     @app_commands.command(name="unregister", description="Delete your currently registered GW2 API key")
-    async def delete_token(self, interaction: discord.Interaction):
-        delete = self.db_service.delete_user_api_key(interaction.user.id)
+    async def delete_token(self, interaction: discord.Interaction = None, user_id: str = None):
+        self.db_service.delete_user_api_key(interaction.user.id)
         await interaction.response.send_message("API key deleted", ephemeral=True)
 
     # Collect relevant account info
@@ -55,7 +56,7 @@ class AccountCog(commands.GroupCog, name="account"):
             return None, None
 
     # Ensure that info is up to date - names can change
-    @tasks.loop(minutes=720.0, reconnect = True)
+    @tasks.loop(minutes=1.0, reconnect = True)
     async def account_updater(self):
         try:
             # Retrieve all users from the database
@@ -63,27 +64,44 @@ class AccountCog(commands.GroupCog, name="account"):
             updated_users = []
 
             guild = self.omen_bot.get_guild(self.configs['discord_guild']['guild_id'])
+            applicant_role = get(guild.roles, id=self.configs['discord_roles']['applicant'])
 
             # Loop through each user in the database
             for user in users:
-                # Check if the user is in the specified guild
-                discord_user = guild.get_member(user.discord_id) # also check to see if user is applicant+
+                print(f"checking {user.discord_id}")
+                user_does_not_exist = False
+                # Check if the user is in the specified guild and has required role or higher
+                discord_user = guild.get_member(user.discord_id)
+                print(f"discord_user: {discord_user}")
                 if not discord_user:
-                    continue # Report it?
-                                
+                    self.logger.warning(f"User {discord_user} does not exist in the server!")
+                    user_does_not_exist = True
+                    print(f"User {discord_user} does not exist in the server!")
+                elif not discord_user.top_role >= applicant_role:
+                    self.logger.warning(f"{discord_user} does not have a top role > {self.configs['discord_roles']['applicant']}")
+                    user_does_not_exist = True
+                    print(f"{discord_user} does not have a top role > {self.configs['discord_roles']['applicant']}")
+
+                # Clean up if user does not exist
+                if user_does_not_exist:
+                    self.db_service.delete_user_api_key(user.discord_id)
+                    print("user doesnt exist")
+                    continue
+                       
                 # Retrieve the user's account information from the API
                 new_gw2_account_id, new_gw2_account_name = self.account_info(user.api_key)
+                print(f"old ids: {user.gw2_account_id} {user.gw2_account_name}")
+                print(f"new ids: {new_gw2_account_id} {new_gw2_account_name}")
                 
                 # Check if the user's account information has changed
                 if new_gw2_account_id and new_gw2_account_name and (new_gw2_account_id != user.gw2_account_id or new_gw2_account_name != user.gw2_account_name):
                     # Update the user's information in the database
                     self.insert_user(user.discord_id, user.api_key, new_gw2_account_id, new_gw2_account_name)
                     updated_users.append(user)
-                else:
-                    user.gw2_account_id = new_gw2_account_id or user.gw2_account_id
-                    user.gw2_account_name = new_gw2_account_name or user.gw2_account_name
-        except Exception:
-            self.account_updater.restart()
+                print(f"updated users: {updated_users}")
+        except Exception as e:
+            self.logger.error(f"Error in account_updater loop: {e}")
+            #self.account_updater.restart()
 
     @account_updater.before_loop
     async def before_account_updater(self):

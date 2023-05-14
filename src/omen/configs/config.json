@@ -14,6 +14,9 @@
     "discord_guild": {
         "guild_id": 840265739884560384
     },
+    "discord_roles": {
+        "applicant": 1068748178607837194
+    },
     "arcdps": {
         "evtc_path": ""
     },
