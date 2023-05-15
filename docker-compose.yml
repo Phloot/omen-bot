@@ -11,25 +11,38 @@ services:
     volumes: 
       - db:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    networks:
+      omen:
+        aliases:
+          - db.omen.com
+
   omen:
     container_name: omen
     build:
       context: ./
     image: omen
-    depends_on:
-      - db
+    restart: always
     ports: 
-      - '8000:8000'
+      - '18000:8000'
     environment:
       DISCORD_TOKEN: ""
       TZ: "America/Denver"
-      DB_HOST: db
+      DB_HOST: db.omen.com
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: tempplaceholder
       DB_NAME: co_db
-    links:
+    depends_on:
       - db
+    networks:
+      omen:
+        aliases:
+          - bot.omen.com
+
 volumes:
   db:
     driver: local
+
+networks:
+  omen:
+    driver: bridge

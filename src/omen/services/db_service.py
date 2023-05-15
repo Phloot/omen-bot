@@ -1,4 +1,5 @@
 import os
+import logging
 
 import psycopg
 from psycopg.rows import class_row
@@ -11,11 +12,12 @@ class DbService:
 
     def __init__(self):
         self.connection = psycopg.connect(
-            dbname="co_db",
-            host="db",
-            port=5432,
+            dbname=os.environ['DB_NAME'],
+            host=os.environ['DB_HOST'],
+            port=os.environ['DB_PORT'],
             user=os.environ['DB_USER'],
             password=os.environ['DB_PASSWORD'])
+        self.logger = logging.getLogger("omen_bot_logger")
         self.cursor = self.connection.cursor
 
     def __del__(self):

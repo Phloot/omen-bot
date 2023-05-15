@@ -27,7 +27,7 @@ class AccountCog(commands.GroupCog, name="account"):
     async def register_token(self, interaction: discord.Interaction, api_key: str):
         await interaction.response.defer()
         # Check with GW2 api to verify key
-        api = GW2Wrapper(api_key)
+        api = await self.api_session(api_key)
 
         token_info = api.token_info()
 
@@ -54,9 +54,13 @@ class AccountCog(commands.GroupCog, name="account"):
         except Exception:
             self.logger.exception("Could not fetch account info!")
             return None, None
+        
+    # Return a GW2Wrapper object for a users API key
+    async def api_session(self, api_key: str):
+        return GW2Wrapper(api_key)
 
     # Ensure that info is up to date - names can change
-    @tasks.loop(minutes=1.0, reconnect = True)
+    @tasks.loop(minutes=720.0, reconnect = True)
     async def account_updater(self):
         try:
             # Retrieve all users from the database
@@ -65,43 +69,36 @@ class AccountCog(commands.GroupCog, name="account"):
 
             guild = self.omen_bot.get_guild(self.configs['discord_guild']['guild_id'])
             applicant_role = get(guild.roles, id=self.configs['discord_roles']['applicant'])
-
             # Loop through each user in the database
             for user in users:
-                print(f"checking {user.discord_id}")
                 user_does_not_exist = False
                 # Check if the user is in the specified guild and has required role or higher
-                discord_user = guild.get_member(user.discord_id)
-                print(f"discord_user: {discord_user}")
+                discord_user = guild.get_member(int(user.discord_id))
                 if not discord_user:
                     self.logger.warning(f"User {discord_user} does not exist in the server!")
                     user_does_not_exist = True
-                    print(f"User {discord_user} does not exist in the server!")
                 elif not discord_user.top_role >= applicant_role:
                     self.logger.warning(f"{discord_user} does not have a top role > {self.configs['discord_roles']['applicant']}")
                     user_does_not_exist = True
-                    print(f"{discord_user} does not have a top role > {self.configs['discord_roles']['applicant']}")
 
                 # Clean up if user does not exist
                 if user_does_not_exist:
                     self.db_service.delete_user_api_key(user.discord_id)
-                    print("user doesnt exist")
+                    self.logger.warning(f"{user.gw2_account_name} (ID: {user.discord_id}) no longer exists, deleting ...")
                     continue
                        
                 # Retrieve the user's account information from the API
-                new_gw2_account_id, new_gw2_account_name = self.account_info(user.api_key)
-                print(f"old ids: {user.gw2_account_id} {user.gw2_account_name}")
-                print(f"new ids: {new_gw2_account_id} {new_gw2_account_name}")
+                gw2_api = await self.api_session(user.api_key)
+                new_gw2_account_id, new_gw2_account_name = await self.account_info(gw2_api)
                 
                 # Check if the user's account information has changed
                 if new_gw2_account_id and new_gw2_account_name and (new_gw2_account_id != user.gw2_account_id or new_gw2_account_name != user.gw2_account_name):
                     # Update the user's information in the database
                     self.insert_user(user.discord_id, user.api_key, new_gw2_account_id, new_gw2_account_name)
                     updated_users.append(user)
-                print(f"updated users: {updated_users}")
+            self.logger.info(f"Updated users in DB: {updated_users}")
         except Exception as e:
-            self.logger.error(f"Error in account_updater loop: {e}")
-            #self.account_updater.restart()
+            self.logger.exception(f"Error in account_updater loop: {e}")
 
     @account_updater.before_loop
     async def before_account_updater(self):

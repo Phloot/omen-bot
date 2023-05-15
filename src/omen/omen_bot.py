@@ -28,7 +28,7 @@ if __name__ == "__main__":
     logger.setLevel(logging.DEBUG)
 
     # Initialize bot and assign intents
-    intents = discord.Intents.default()
+    intents = discord.Intents.all()
     intents.members = True
     intents.presences = True
     intents.message_content = True

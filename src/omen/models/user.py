@@ -7,4 +7,6 @@ from pydantic.dataclasses import dataclass
 class User:
     discord_id: str
     api_key: str
-    created_date: datetime.datetime
+    gw2_account_id: str
+    gw2_account_name: str
+    last_updated: datetime.datetime
